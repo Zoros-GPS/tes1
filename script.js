@@ -31,6 +31,62 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function getUniqueSeries() {
+    return [...new Set(gpuData
+        .filter(gpu => gpu.Brand.toUpperCase() === currentBrand.toUpperCase())
+        .map(gpu => gpu.Series)
+        .filter(series => series && series.trim() !== '')
+    )].sort();
+}
+
+function updateSeriesFilters() {
+    const uniqueSeries = getUniqueSeries();
+    const filterGroup = document.querySelector('.filter-group[aria-label="GPU Series"]');
+    if (!filterGroup) return;
+    
+    filterGroup.innerHTML = '';
+    
+    uniqueSeries.forEach(series => {
+        const button = document.createElement('button');
+        button.className = 'filter-button';
+        button.setAttribute('role', 'checkbox');
+        button.setAttribute('aria-checked', 'false');
+        button.textContent = series;
+        filterGroup.appendChild(button);
+    });
+}
+
+function getUniqueCards() {
+    const activeFilters = getActiveFilters();
+    return [...new Set(gpuData
+        .filter(gpu => {
+            const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
+            const seriesMatch = activeFilters.series.length === 0 || 
+                              activeFilters.series.includes(gpu.Series);
+            return brandMatch && seriesMatch;
+        })
+        .map(gpu => gpu.Card)
+        .filter(card => card && card.trim() !== '')
+    )].sort();
+}
+
+function updateCardFilters() {
+    const uniqueCards = getUniqueCards();
+    const filterGroup = document.querySelector('.filter-group[aria-label="GPU Cards"]');
+    if (!filterGroup) return;
+    
+    filterGroup.innerHTML = '';
+    
+    uniqueCards.forEach(card => {
+        const button = document.createElement('button');
+        button.className = 'filter-button';
+        button.setAttribute('role', 'checkbox');
+        button.setAttribute('aria-checked', 'false');
+        button.textContent = card;
+        filterGroup.appendChild(button);
+    });
+}
+
 function updateGPUGrid() {
     const gpuGrid = document.querySelector('.gpu-grid');
     if (!gpuGrid) return;
