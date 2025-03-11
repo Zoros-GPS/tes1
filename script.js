@@ -23,6 +23,7 @@ async function initializeApp() {
 
         // Update UI only after data is loaded
         updateSeriesFilters();
+        updateCardFilters()
         updateGPUGrid();
     } catch (error) {
         console.error('Error loading GPU data:', error);
@@ -64,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (brandSpan) {
                 currentBrand = brandSpan.textContent;
                 updateSeriesFilters();
+                updateCardFilters()
                 updateGPUGrid();
             }
         });
@@ -88,7 +90,8 @@ document.addEventListener('DOMContentLoaded', function() {
             button.classList.toggle('active');
             button.setAttribute('aria-checked', button.classList.contains('active'));
             
-            updateCardFilters(); // Update card filters when series changes
+            updateCardFilters();
+             // Update card filters when series changes
             updateGPUGrid();
         }
     });
