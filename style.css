@@ -823,3 +823,55 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary);
 }
+
+/* Loading Animation Container */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+}
+
+/* Animated GPU Loader */
+.gpu-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* GPU Icon (Circular Pulse Effect) */
+.gpu-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #00f260, #0575E6);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 255, 120, 0.8);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(0, 255, 120, 0.8);
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 30px rgba(0, 255, 120, 1);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(0, 255, 120, 0.8);
+    }
+}
+
+/* Smooth Fade-in */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

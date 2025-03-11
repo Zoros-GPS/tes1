@@ -2,6 +2,18 @@ let gpuData = [];
 let currentBrand = 'NVIDIA';
 
 async function initializeApp() {
+    const gpuGrid = document.querySelector('.gpu-grid');
+    if (gpuGrid) {
+        gpuGrid.innerHTML = `
+            <div class="loading-container">
+                <div class="gpu-loader">
+                    <div class="gpu-icon"></div>
+                    <p>Loading GPUs...</p>
+                </div>
+            </div>
+        `;
+    }
+
     try {
         const response = await fetch('./gpu_data.json');
         if (!response.ok) {
@@ -14,7 +26,7 @@ async function initializeApp() {
         }
 
         console.log('GPU Data loaded:', gpuData);
-        
+
         // Ensure NVIDIA is the default brand
         currentBrand = 'NVIDIA';
 
@@ -24,9 +36,8 @@ async function initializeApp() {
     } catch (error) {
         console.error('Error loading GPU data:', error);
         
-        const gpuGrid = document.querySelector('.gpu-grid');
         if (gpuGrid) {
-            gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data</div>';
+            gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data. Please try again later.</div>';
         }
     }
 }
