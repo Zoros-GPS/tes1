@@ -1,30 +1,22 @@
-// Secure data storage
-const gpuData = [
-    {
-        "Brand": "NVIDIA",
-        "Series": "RTX 4000",
-        "Card": "RTX 4090",
-        "Model": "NVIDIA GeForce RTX 4090 FE",
-        "Price": 159999.0,
-        "Retailer": "RPTech",
-        "Link": "#"
-    },
-    {
-        "Brand": "NVIDIA",
-        "Series": "RTX 3000",
-        "Card": "RTX 3080",
-        "Model": "NVIDIA GeForce RTX 3080 FE",
-        "Price": 69999.0,
-        "Retailer": "RPTech",
-        "Link": "#"
-    }
-    // Add all your GPU data here
-];
+let gpuData = [];
 
+async function fetchGPUData() {
+    try {
+        const response = await fetch('./gpu_data.json'); // Fetch from same directory
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        gpuData = await response.json();
+        console.log('GPU Data loaded:', gpuData);
+    } catch (error) {
+        console.error('Error fetching GPU data:', error);
+    }
+}
 let currentBrand = 'NVIDIA';
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize with dynamic series filters
+    fetchGPUData();
     updateSeriesFilters();
     updateGPUGrid();
 
