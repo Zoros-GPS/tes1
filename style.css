@@ -831,7 +831,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #0d1117; /* Dark background */
+    background: #0d1117;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -843,38 +843,35 @@ body {
     transition: opacity 0.5s ease-in-out;
 }
 
-/* Animated GPU Loader */
-.loading-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: fadeIn 0.8s ease-in-out;
+/* GPU Loader SVG */
+.gpu-loader svg {
+    width: 120px;
+    height: 120px;
+    stroke: #00ff88;
+    stroke-width: 2;
+    fill: none;
 }
 
-/* GPU Icon (Circular Pulse Effect) */
-.gpu-icon {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #00f260, #0575E6);
-    border-radius: 50%;
-    position: relative;
-    box-shadow: 0 0 20px rgba(0, 255, 120, 0.9);
-    animation: pulse 1.5s infinite ease-in-out;
+/* Animated outline effect */
+.gpu-outline {
+    stroke-dasharray: 100; /* Length of the stroke */
+    stroke-dashoffset: 100; /* Start fully hidden */
+    animation: outlineDraw 2s linear infinite;
 }
 
-/* Pulse Animation */
-@keyframes pulse {
+/* Outline animation */
+@keyframes outlineDraw {
     0% {
-        transform: scale(1);
-        box-shadow: 0 0 20px rgba(0, 255, 120, 0.9);
+        stroke-dashoffset: 100;
+        stroke: #00ff88;
     }
     50% {
-        transform: scale(1.2);
-        box-shadow: 0 0 40px rgba(0, 255, 120, 1);
+        stroke-dashoffset: 0;
+        stroke: #00aaff;
     }
     100% {
-        transform: scale(1);
-        box-shadow: 0 0 20px rgba(0, 255, 120, 0.9);
+        stroke-dashoffset: -100;
+        stroke: #00ff88;
     }
 }
 
