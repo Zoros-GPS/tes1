@@ -70,28 +70,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Filter functionality
-    const filterGroups = document.querySelectorAll('.filter-group');
-    filterGroups.forEach(group => {
-        group.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-button')) {
-                const button = e.target;
-                const isGroupExclusive = group.getAttribute('data-exclusive') === 'true';
-                
-                if (isGroupExclusive) {
-                    group.querySelectorAll('.filter-button').forEach(btn => {
-                        if (btn !== button) {
-                            btn.classList.remove('active');
-                            btn.setAttribute('aria-checked', 'false');
-                        }
-                    });
-                }
-                
-                button.classList.toggle('active');
-                button.setAttribute('aria-checked', button.classList.contains('active'));
-                
-                updateGPUGrid();
+    document.querySelector('.filter-group[aria-label="GPU Series"]').addEventListener('click', (e) => {
+        if (e.target.classList.contains('filter-button')) {
+            const button = e.target;
+            const filterGroup = button.closest('.filter-group');
+            const isGroupExclusive = filterGroup.getAttribute('data-exclusive') === 'true';
+            
+            if (isGroupExclusive) {
+                filterGroup.querySelectorAll('.filter-button').forEach(btn => {
+                    if (btn !== button) {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-checked', 'false');
+                    }
+                });
             }
-        });
+            
+            button.classList.toggle('active');
+            button.setAttribute('aria-checked', button.classList.contains('active'));
+            
+            updateCardFilters(); // Update card filters when series changes
+            updateGPUGrid();
+        }
     });
 });
 
@@ -102,6 +101,8 @@ function getUniqueSeries() {
         .filter(series => series && series.trim() !== '')
     )].sort();
 }
+
+
 
 function updateSeriesFilters() {
     const uniqueSeries = getUniqueSeries();
@@ -119,14 +120,48 @@ function updateSeriesFilters() {
     });
 }
 
+function getUniqueCards() {
+    return [...new Set(gpuData
+        .filter(gpu => {
+            const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
+            const seriesMatch = getActiveFilters().series.length === 0 || 
+                              getActiveFilters().series.includes(gpu.Series);
+            return brandMatch && seriesMatch;
+        })
+        .map(gpu => gpu.Card)
+        .filter(card => card && card.trim() !== '')
+    )].sort();
+}
+
+function updateCardFilters() {
+    const uniqueCards = getUniqueCards();
+    const filterGroup = document.querySelector('.filter-group[aria-label="GPU Cards"]');
+    if (!filterGroup) return;
+    
+    filterGroup.innerHTML = '';
+    uniqueCards.forEach(card => {
+        const button = document.createElement('button');
+        button.className = 'filter-button';
+        button.setAttribute('role', 'checkbox');
+        button.setAttribute('aria-checked', 'false');
+        button.textContent = card;
+        filterGroup.appendChild(button);
+    });
+}
+
+// Update the getActiveFilters function to include cards
 function getActiveFilters() {
     const filters = {
         series: [],
+        cards: [],
         memory: []
     };
 
     document.querySelectorAll('.filter-group[aria-label="GPU Series"] .filter-button.active')
         .forEach(button => filters.series.push(button.textContent.trim()));
+
+    document.querySelectorAll('.filter-group[aria-label="GPU Cards"] .filter-button.active')
+        .forEach(button => filters.cards.push(button.textContent.trim()));
 
     document.querySelectorAll('.filter-group[aria-label="Memory Size"] .filter-button.active')
         .forEach(button => filters.memory.push(button.textContent.trim()));
@@ -134,14 +169,18 @@ function getActiveFilters() {
     return filters;
 }
 
+// Update the filterGPUs function to include card filtering
 function filterGPUs(gpus, filters) {
     return gpus.filter(gpu => {
         const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
         const seriesMatch = filters.series.length === 0 || 
                            filters.series.some(series => gpu.Series === series);
-        return brandMatch && seriesMatch;
+        const cardMatch = filters.cards.length === 0 ||
+                         filters.cards.some(card => gpu.Card === card);
+        return brandMatch && seriesMatch && cardMatch;
     });
 }
+
 
 function updateGPUGrid() {
     const gpuGrid = document.querySelector('.gpu-grid');
