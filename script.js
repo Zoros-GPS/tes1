@@ -1,24 +1,25 @@
 let gpuData = [];
+let currentBrand = 'NVIDIA';
 
 async function fetchGPUData() {
     try {
-        const response = await fetch('./gpu_data.json'); // Fetch from same directory
+        const response = await fetch('./gpu_data.json');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         gpuData = await response.json();
         console.log('GPU Data loaded:', gpuData);
+        // Move these here so they run after data is loaded
+        updateSeriesFilters();
+        updateGPUGrid();
     } catch (error) {
         console.error('Error fetching GPU data:', error);
     }
 }
-let currentBrand = 'NVIDIA';
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize with dynamic series filters
+    // Only fetch data initially
     fetchGPUData();
-    updateSeriesFilters();
-    updateGPUGrid();
 
     // Tab functionality
     const tabs = document.querySelectorAll('.tab');
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             tab.setAttribute('aria-selected', 'true');
             
             currentBrand = tab.querySelector('span').textContent;
-            updateSeriesFilters(); // Update series filters when brand changes
+            updateSeriesFilters();
             updateGPUGrid();
         });
     });
@@ -61,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
 function getUniqueSeries() {
     return [...new Set(gpuData
         .filter(gpu => gpu.Brand.toUpperCase() === currentBrand.toUpperCase())
