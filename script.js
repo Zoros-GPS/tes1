@@ -8,13 +8,22 @@ async function initializeApp() {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         gpuData = await response.json();
+        
+        if (gpuData.length === 0) {
+            throw new Error('GPU data is empty');
+        }
+
         console.log('GPU Data loaded:', gpuData);
         
-        // Since NVIDIA tab is already active in HTML, just update the display
+        // Ensure NVIDIA is the default brand
+        currentBrand = 'NVIDIA';
+
+        // Update UI only after data is loaded
         updateSeriesFilters();
         updateGPUGrid();
     } catch (error) {
         console.error('Error loading GPU data:', error);
+        
         const gpuGrid = document.querySelector('.gpu-grid');
         if (gpuGrid) {
             gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data</div>';
@@ -128,14 +137,17 @@ function filterGPUs(gpus, filters) {
 }
 
 function updateGPUGrid() {
-    if (!gpuData.length) return;
+    const gpuGrid = document.querySelector('.gpu-grid');
+    if (!gpuGrid) return;
+
+    if (!gpuData.length) {
+        gpuGrid.innerHTML = '<div class="error-message">No GPU data available</div>';
+        return;
+    }
 
     const filters = getActiveFilters();
     const filteredGPUs = filterGPUs(gpuData, filters);
     
-    const gpuGrid = document.querySelector('.gpu-grid');
-    if (!gpuGrid) return;
-
     gpuGrid.innerHTML = '';
 
     if (filteredGPUs.length === 0) {
@@ -148,7 +160,6 @@ function updateGPUGrid() {
         gpuGrid.appendChild(card);
     });
 
-    // Update section title
     const sectionTitle = document.querySelector('.section-title');
     if (sectionTitle) {
         const seriesText = filters.series.length > 0 ? filters.series[0] : '';
