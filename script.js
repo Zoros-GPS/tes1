@@ -3,7 +3,9 @@ let currentBrand = 'NVIDIA';
 
 async function initializeApp() {
     const loadingOverlay = document.getElementById('loading-overlay');
-    loadingOverlay.style.display = 'flex'; // Show loading screen
+    if (loadingOverlay) {
+        loadingOverlay.style.display = 'flex';
+    }
 
     try {
         const response = await fetch('./gpu_data.json');
@@ -16,84 +18,84 @@ async function initializeApp() {
             throw new Error('GPU data is empty');
         }
 
-        console.log('GPU Data loaded:', gpuData);
-
-        // Ensure NVIDIA is the default brand
+        // Initialize UI with NVIDIA as default
         currentBrand = 'NVIDIA';
-
-        // Update UI only after data is loaded
         updateSeriesFilters();
-        updateCardFilters()
+        updateCardFilters();
         updateGPUGrid();
     } catch (error) {
         console.error('Error loading GPU data:', error);
-        document.querySelector('.gpu-grid').innerHTML = 
-            '<div class="error-message">Error loading GPU data. Please try again later.</div>';
+        const gpuGrid = document.querySelector('.gpu-grid');
+        if (gpuGrid) {
+            gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data. Please try again later.</div>';
+        }
     } finally {
-        setTimeout(() => {
-            loadingOverlay.style.opacity = '0'; // Fade out effect
+        if (loadingOverlay) {
             setTimeout(() => {
-                loadingOverlay.style.display = 'none';
-            }, 500); // Ensure it disappears after fade-out
-        }, 1000); // Keep loading visible for 1 sec for smooth UX
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 1000);
+        }
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the app
-    initializeApp();
+document.addEventListener('DOMContentLoaded', initializeApp);
 
-    // Tab functionality - Updated selector to match your HTML structure
+// Add event listeners for tabs and filters
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching
     const tabsContainer = document.querySelector('.tabs-container .tabs');
     if (tabsContainer) {
         tabsContainer.addEventListener('click', (e) => {
             const tab = e.target.closest('.tab');
             if (!tab) return;
 
-            // Remove active class from all tabs
             tabsContainer.querySelectorAll('.tab').forEach(t => {
                 t.classList.remove('active');
                 t.setAttribute('aria-selected', 'false');
             });
             
-            // Add active class to clicked tab
             tab.classList.add('active');
             tab.setAttribute('aria-selected', 'true');
             
-            // Update current brand
             const brandSpan = tab.querySelector('span');
             if (brandSpan) {
                 currentBrand = brandSpan.textContent;
                 updateSeriesFilters();
-                updateCardFilters()
+                updateCardFilters();
                 updateGPUGrid();
             }
         });
     }
 
-    // Filter functionality
-    document.querySelector('.filter-group[aria-label="GPU Series"]').addEventListener('click', (e) => {
-        if (e.target.classList.contains('filter-button')) {
-            const button = e.target;
-            const filterGroup = button.closest('.filter-group');
-            const isGroupExclusive = filterGroup.getAttribute('data-exclusive') === 'true';
-            
-            if (isGroupExclusive) {
-                filterGroup.querySelectorAll('.filter-button').forEach(btn => {
-                    if (btn !== button) {
-                        btn.classList.remove('active');
-                        btn.setAttribute('aria-checked', 'false');
-                    }
-                });
+    // Filter group event listeners
+    const filterGroups = document.querySelectorAll('.filter-group');
+    filterGroups.forEach(group => {
+        group.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-button')) {
+                const button = e.target;
+                const isGroupExclusive = group.getAttribute('data-exclusive') === 'true';
+                
+                if (isGroupExclusive) {
+                    group.querySelectorAll('.filter-button').forEach(btn => {
+                        if (btn !== button) {
+                            btn.classList.remove('active');
+                            btn.setAttribute('aria-checked', 'false');
+                        }
+                    });
+                }
+                
+                button.classList.toggle('active');
+                button.setAttribute('aria-checked', button.classList.contains('active'));
+                
+                if (group.getAttribute('aria-label') === 'GPU Series') {
+                    updateCardFilters();
+                }
+                updateGPUGrid();
             }
-            
-            button.classList.toggle('active');
-            button.setAttribute('aria-checked', button.classList.contains('active'));
-            
-            updateCardFilters();
-             // Update card filters when series changes
-            updateGPUGrid();
-        }
+        });
     });
 });
 
@@ -104,8 +106,6 @@ function getUniqueSeries() {
         .filter(series => series && series.trim() !== '')
     )].sort();
 }
-
-
 
 function updateSeriesFilters() {
     const uniqueSeries = getUniqueSeries();
@@ -124,11 +124,12 @@ function updateSeriesFilters() {
 }
 
 function getUniqueCards() {
+    const activeFilters = getActiveFilters();
     return [...new Set(gpuData
         .filter(gpu => {
             const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
-            const seriesMatch = getActiveFilters().series.length === 0 || 
-                              getActiveFilters().series.includes(gpu.Series);
+            const seriesMatch = activeFilters.series.length === 0 || 
+                              activeFilters.series.includes(gpu.Series);
             return brandMatch && seriesMatch;
         })
         .map(gpu => gpu.Card)
@@ -152,7 +153,6 @@ function updateCardFilters() {
     });
 }
 
-// Update the getActiveFilters function to include cards
 function getActiveFilters() {
     const filters = {
         series: [],
@@ -172,7 +172,6 @@ function getActiveFilters() {
     return filters;
 }
 
-// Update the filterGPUs function to include card filtering
 function filterGPUs(gpus, filters) {
     return gpus.filter(gpu => {
         const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
@@ -184,15 +183,9 @@ function filterGPUs(gpus, filters) {
     });
 }
 
-
 function updateGPUGrid() {
     const gpuGrid = document.querySelector('.gpu-grid');
     if (!gpuGrid) return;
-
-    if (!gpuData.length) {
-        gpuGrid.innerHTML = '<div class="error-message">No GPU data available</div>';
-        return;
-    }
 
     const filters = getActiveFilters();
     const filteredGPUs = filterGPUs(gpuData, filters);
