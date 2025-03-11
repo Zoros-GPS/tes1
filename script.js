@@ -224,6 +224,11 @@ function updateGPUGrid() {
     const filters = getActiveFilters();
     const filteredGPUs = filterGPUs(gpuData, filters);
     
+    // Calculate pagination
+    const startIndex = (currentPage - 1) * cardsPerPage;
+    const endIndex = startIndex + cardsPerPage;
+    const paginatedGPUs = filteredGPUs.slice(startIndex, endIndex);
+    
     gpuGrid.innerHTML = '';
 
     if (filteredGPUs.length === 0) {
@@ -231,11 +236,21 @@ function updateGPUGrid() {
         return;
     }
 
-    filteredGPUs.forEach(gpu => {
+    // Create grid container
+    const gridContainer = document.createElement('div');
+    gridContainer.className = 'gpu-grid-container';
+
+    // Add cards to grid
+    paginatedGPUs.forEach(gpu => {
         const card = createGPUCard(gpu);
-        gpuGrid.appendChild(card);
+        gridContainer.appendChild(card);
     });
 
+    // Add grid and pagination to container
+    gpuGrid.appendChild(gridContainer);
+    gpuGrid.appendChild(createPagination(filteredGPUs.length));
+
+    // Update title with total count
     const sectionTitle = document.querySelector('.section-title');
     if (sectionTitle) {
         const seriesText = filters.series.length > 0 ? filters.series[0] : '';
@@ -243,6 +258,7 @@ function updateGPUGrid() {
         sectionTitle.textContent = `${currentBrand} ${seriesText}${cardText} (${filteredGPUs.length} cards)`;
     }
 }
+
 
 function createGPUCard(gpu) {
     const card = document.createElement('div');

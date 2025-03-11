@@ -872,56 +872,15 @@ body {
     }
 }
 
-/* Grid Layout */
-.gpu-grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-/* Pagination Styles */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-top: 20px;
-    padding: 20px 0;
-}
-
-.pagination-button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: #1f6feb;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.pagination-button:disabled {
-    background-color: #2d3139;
-    cursor: not-allowed;
-}
-
-.pagination-button:hover:not(:disabled) {
-    background-color: #388bfd;
-}
-
-.page-numbers {
-    font-size: 14px;
-    color: #c9d1d9;
-}
-
-/* Split View Layout */
-.container {
+.content-wrapper {
     display: flex;
     gap: 20px;
     padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.filters-section {
+.filters-sidebar {
     width: 250px;
     flex-shrink: 0;
 }
@@ -930,21 +889,46 @@ body {
     flex-grow: 1;
 }
 
-/* Scrollable Filter Lists */
+.gpu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
 .filter-group {
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 10px;
     background: #161b22;
     border-radius: 6px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    padding: 10px;
+}
+
+.filter-group[aria-label="GPU Series"],
+.filter-group[aria-label="GPU Cards"] {
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .filter-button {
-    display: block;
     width: 100%;
     text-align: left;
     padding: 8px 12px;
     margin: 4px 0;
+    background: transparent;
+    border: 1px solid #30363d;
     border-radius: 4px;
+    color: #c9d1d9;
+    cursor: pointer;
+}
+
+.filter-button.active {
+    background-color: #1f6feb;
+    border-color: #1f6feb;
+    color: white;
+}
+
+.gpu-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 16px;
 }
