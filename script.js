@@ -1,51 +1,11 @@
 let gpuData = [];
 let currentBrand = 'NVIDIA';
 
-async function initializeApp() {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    if (loadingOverlay) {
-        loadingOverlay.style.display = 'flex';
-    }
-
-    try {
-        const response = await fetch('./gpu_data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        gpuData = await response.json();
-        
-        if (gpuData.length === 0) {
-            throw new Error('GPU data is empty');
-        }
-
-        // Initialize UI with NVIDIA as default
-        currentBrand = 'NVIDIA';
-        updateSeriesFilters();
-        updateCardFilters();
-        updateGPUGrid();
-    } catch (error) {
-        console.error('Error loading GPU data:', error);
-        const gpuGrid = document.querySelector('.gpu-grid');
-        if (gpuGrid) {
-            gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data. Please try again later.</div>';
-        }
-    } finally {
-        if (loadingOverlay) {
-            setTimeout(() => {
-                loadingOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    loadingOverlay.style.display = 'none';
-                }, 500);
-            }, 1000);
-        }
-    }
-}
-
-document.addEventListener('DOMContentLoaded', initializeApp);
-
-// Add event listeners for tabs and filters
 document.addEventListener('DOMContentLoaded', function() {
-    // Tab switching
+    // Initialize the app
+    initializeApp();
+
+    // Tab functionality
     const tabsContainer = document.querySelector('.tabs-container .tabs');
     if (tabsContainer) {
         tabsContainer.addEventListener('click', (e) => {
@@ -70,16 +30,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Filter group event listeners
-    const filterGroups = document.querySelectorAll('.filter-group');
-    filterGroups.forEach(group => {
-        group.addEventListener('click', (e) => {
+    // Series Filter functionality
+    const seriesFilter = document.querySelector('.filter-group[aria-label="GPU Series"]');
+    if (seriesFilter) {
+        seriesFilter.addEventListener('click', (e) => {
             if (e.target.classList.contains('filter-button')) {
                 const button = e.target;
-                const isGroupExclusive = group.getAttribute('data-exclusive') === 'true';
+                const filterGroup = button.closest('.filter-group');
                 
-                if (isGroupExclusive) {
-                    group.querySelectorAll('.filter-button').forEach(btn => {
+                // Handle exclusive selection
+                if (filterGroup.getAttribute('data-exclusive') === 'true') {
+                    filterGroup.querySelectorAll('.filter-button').forEach(btn => {
                         if (btn !== button) {
                             btn.classList.remove('active');
                             btn.setAttribute('aria-checked', 'false');
@@ -90,13 +51,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 button.classList.toggle('active');
                 button.setAttribute('aria-checked', button.classList.contains('active'));
                 
-                if (group.getAttribute('aria-label') === 'GPU Series') {
-                    updateCardFilters();
-                }
+                // Update card filters immediately after series selection
+                updateCardFilters();
                 updateGPUGrid();
             }
         });
-    });
+    }
+
+    // Card Filter functionality
+    const cardFilter = document.querySelector('.filter-group[aria-label="GPU Cards"]');
+    if (cardFilter) {
+        cardFilter.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-button')) {
+                const button = e.target;
+                const filterGroup = button.closest('.filter-group');
+                
+                // Handle exclusive selection
+                if (filterGroup.getAttribute('data-exclusive') === 'true') {
+                    filterGroup.querySelectorAll('.filter-button').forEach(btn => {
+                        if (btn !== button) {
+                            btn.classList.remove('active');
+                            btn.setAttribute('aria-checked', 'false');
+                        }
+                    });
+                }
+                
+                button.classList.toggle('active');
+                button.setAttribute('aria-checked', button.classList.contains('active'));
+                
+                // Update grid immediately after card selection
+                updateGPUGrid();
+            }
+        });
+    }
 });
 
 function getUniqueSeries() {
@@ -112,7 +99,10 @@ function updateSeriesFilters() {
     const filterGroup = document.querySelector('.filter-group[aria-label="GPU Series"]');
     if (!filterGroup) return;
     
+    // Clear existing filters
     filterGroup.innerHTML = '';
+    
+    // Add new series filters
     uniqueSeries.forEach(series => {
         const button = document.createElement('button');
         button.className = 'filter-button';
@@ -142,7 +132,10 @@ function updateCardFilters() {
     const filterGroup = document.querySelector('.filter-group[aria-label="GPU Cards"]');
     if (!filterGroup) return;
     
+    // Clear existing filters
     filterGroup.innerHTML = '';
+    
+    // Add new card filters
     uniqueCards.forEach(card => {
         const button = document.createElement('button');
         button.className = 'filter-button';
@@ -156,8 +149,7 @@ function updateCardFilters() {
 function getActiveFilters() {
     const filters = {
         series: [],
-        cards: [],
-        memory: []
+        cards: []
     };
 
     document.querySelectorAll('.filter-group[aria-label="GPU Series"] .filter-button.active')
@@ -166,9 +158,6 @@ function getActiveFilters() {
     document.querySelectorAll('.filter-group[aria-label="GPU Cards"] .filter-button.active')
         .forEach(button => filters.cards.push(button.textContent.trim()));
 
-    document.querySelectorAll('.filter-group[aria-label="Memory Size"] .filter-button.active')
-        .forEach(button => filters.memory.push(button.textContent.trim()));
-
     return filters;
 }
 
@@ -176,9 +165,9 @@ function filterGPUs(gpus, filters) {
     return gpus.filter(gpu => {
         const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
         const seriesMatch = filters.series.length === 0 || 
-                           filters.series.some(series => gpu.Series === series);
+                           filters.series.includes(gpu.Series);
         const cardMatch = filters.cards.length === 0 ||
-                         filters.cards.some(card => gpu.Card === card);
+                         filters.cards.includes(gpu.Card);
         return brandMatch && seriesMatch && cardMatch;
     });
 }
@@ -205,7 +194,8 @@ function updateGPUGrid() {
     const sectionTitle = document.querySelector('.section-title');
     if (sectionTitle) {
         const seriesText = filters.series.length > 0 ? filters.series[0] : '';
-        sectionTitle.textContent = `${currentBrand} ${seriesText} (${filteredGPUs.length} cards)`;
+        const cardText = filters.cards.length > 0 ? ` - ${filters.cards[0]}` : '';
+        sectionTitle.textContent = `${currentBrand} ${seriesText}${cardText} (${filteredGPUs.length} cards)`;
     }
 }
 
@@ -239,4 +229,42 @@ function createGPUCard(gpu) {
     `;
 
     return card;
+}
+
+async function initializeApp() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+        loadingOverlay.style.display = 'flex';
+    }
+
+    try {
+        const response = await fetch('./gpu_data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        gpuData = await response.json();
+        
+        if (gpuData.length === 0) {
+            throw new Error('GPU data is empty');
+        }
+
+        updateSeriesFilters();
+        updateCardFilters();
+        updateGPUGrid();
+    } catch (error) {
+        console.error('Error loading GPU data:', error);
+        const gpuGrid = document.querySelector('.gpu-grid');
+        if (gpuGrid) {
+            gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data. Please try again later.</div>';
+        }
+    } finally {
+        if (loadingOverlay) {
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500);
+            }, 1000);
+        }
+    }
 }
