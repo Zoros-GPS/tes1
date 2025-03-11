@@ -10,20 +10,15 @@ async function initializeApp() {
         gpuData = await response.json();
         console.log('GPU Data loaded:', gpuData);
         
-        // Set NVIDIA tab as active by default
-        const nvidiaTab = document.querySelector('#nvidia-tab');
-        if (nvidiaTab) {
-            nvidiaTab.classList.add('active');
-            nvidiaTab.setAttribute('aria-selected', 'true');
-        }
-
-        // Initialize with NVIDIA data
+        // Since NVIDIA tab is already active in HTML, just update the display
         updateSeriesFilters();
         updateGPUGrid();
     } catch (error) {
         console.error('Error loading GPU data:', error);
         const gpuGrid = document.querySelector('.gpu-grid');
-        gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data</div>';
+        if (gpuGrid) {
+            gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data</div>';
+        }
     }
 }
 
@@ -31,23 +26,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the app
     initializeApp();
 
-    // Tab functionality
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => {
+    // Tab functionality - Updated selector to match your HTML structure
+    const tabsContainer = document.querySelector('.tabs-container .tabs');
+    if (tabsContainer) {
+        tabsContainer.addEventListener('click', (e) => {
+            const tab = e.target.closest('.tab');
+            if (!tab) return;
+
+            // Remove active class from all tabs
+            tabsContainer.querySelectorAll('.tab').forEach(t => {
                 t.classList.remove('active');
                 t.setAttribute('aria-selected', 'false');
             });
             
+            // Add active class to clicked tab
             tab.classList.add('active');
             tab.setAttribute('aria-selected', 'true');
             
-            currentBrand = tab.querySelector('span').textContent;
-            updateSeriesFilters();
-            updateGPUGrid();
+            // Update current brand
+            const brandSpan = tab.querySelector('span');
+            if (brandSpan) {
+                currentBrand = brandSpan.textContent;
+                updateSeriesFilters();
+                updateGPUGrid();
+            }
         });
-    });
+    }
 
     // Filter functionality
     const filterGroups = document.querySelectorAll('.filter-group');
