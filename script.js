@@ -33,8 +33,8 @@ async function initializeApp() {
             loadingOverlay.style.opacity = '0'; // Fade out effect
             setTimeout(() => {
                 loadingOverlay.style.display = 'none';
-            }, 500); // Give time for fade-out animation
-        }, 1000); // Keep loading visible for a second to avoid sudden jumps
+            }, 500); // Ensure it disappears after fade-out
+        }, 1000); // Keep loading visible for 1 sec for smooth UX
     }
 }
 
