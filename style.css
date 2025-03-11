@@ -1,3 +1,4 @@
+
 :root {
     /* Colors */
     --primary: #7e68ff;
@@ -870,58 +871,4 @@ body {
         stroke-dashoffset: -300;
         stroke: #00ff88;
     }
-}
-
-.layout {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.filters-sidebar {
-    width: 250px;
-    flex-shrink: 0;
-}
-
-.main-content {
-    flex-grow: 1;
-}
-
-.gpu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.filter-group {
-    background: #161b22;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    padding: 10px;
-}
-
-.filter-group[aria-label="GPU Series"],
-.filter-group[aria-label="GPU Cards"] {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.filter-button {
-    width: 100%;
-    text-align: left;
-    padding: 8px 12px;
-    margin: 4px 0;
-    background: transparent;
-    border: 1px solid #30363d;
-    border-radius: 4px;
-    color: #c9d1d9;
-    cursor: pointer;
-}
-
-.filter-button.active {
-    background-color: #1f6feb;
-    border-color: #1f6feb;
-    color: white;
 }

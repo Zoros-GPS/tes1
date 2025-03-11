@@ -1,50 +1,5 @@
 let gpuData = [];
 let currentBrand = 'NVIDIA';
-let currentPage = 1;
-const cardsPerPage = 12; // Number of cards to show per page
-let totalPages = 0;
-
-function createPagination(totalItems) {
-    totalPages = Math.ceil(totalItems / cardsPerPage);
-    const paginationContainer = document.createElement('div');
-    paginationContainer.className = 'pagination';
-    
-    // Add "Previous" button
-    const prevButton = document.createElement('button');
-    prevButton.textContent = '← Previous';
-    prevButton.className = 'pagination-button';
-    prevButton.disabled = currentPage === 1;
-    prevButton.onclick = () => {
-        if (currentPage > 1) {
-            currentPage--;
-            updateGPUGrid();
-        }
-    };
-    
-    // Add page numbers
-    const pageNumbers = document.createElement('div');
-    pageNumbers.className = 'page-numbers';
-    pageNumbers.textContent = `Page ${currentPage} of ${totalPages}`;
-    
-    // Add "Next" button
-    const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next →';
-    nextButton.className = 'pagination-button';
-    nextButton.disabled = currentPage === totalPages;
-    nextButton.onclick = () => {
-        if (currentPage < totalPages) {
-            currentPage++;
-            updateGPUGrid();
-        }
-    };
-    
-    paginationContainer.appendChild(prevButton);
-    paginationContainer.appendChild(pageNumbers);
-    paginationContainer.appendChild(nextButton);
-    
-    return paginationContainer;
-}
-
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the app
@@ -224,11 +179,6 @@ function updateGPUGrid() {
     const filters = getActiveFilters();
     const filteredGPUs = filterGPUs(gpuData, filters);
     
-    // Calculate pagination
-    const startIndex = (currentPage - 1) * cardsPerPage;
-    const endIndex = startIndex + cardsPerPage;
-    const paginatedGPUs = filteredGPUs.slice(startIndex, endIndex);
-    
     gpuGrid.innerHTML = '';
 
     if (filteredGPUs.length === 0) {
@@ -236,21 +186,11 @@ function updateGPUGrid() {
         return;
     }
 
-    // Create grid container
-    const gridContainer = document.createElement('div');
-    gridContainer.className = 'gpu-grid-container';
-
-    // Add cards to grid
-    paginatedGPUs.forEach(gpu => {
+    filteredGPUs.forEach(gpu => {
         const card = createGPUCard(gpu);
-        gridContainer.appendChild(card);
+        gpuGrid.appendChild(card);
     });
 
-    // Add grid and pagination to container
-    gpuGrid.appendChild(gridContainer);
-    gpuGrid.appendChild(createPagination(filteredGPUs.length));
-
-    // Update title with total count
     const sectionTitle = document.querySelector('.section-title');
     if (sectionTitle) {
         const seriesText = filters.series.length > 0 ? filters.series[0] : '';
@@ -258,7 +198,6 @@ function updateGPUGrid() {
         sectionTitle.textContent = `${currentBrand} ${seriesText}${cardText} (${filteredGPUs.length} cards)`;
     }
 }
-
 
 function createGPUCard(gpu) {
     const card = document.createElement('div');
@@ -329,3 +268,6 @@ async function initializeApp() {
         }
     }
 }
+
+
+
