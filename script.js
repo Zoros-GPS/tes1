@@ -2,17 +2,8 @@ let gpuData = [];
 let currentBrand = 'NVIDIA';
 
 async function initializeApp() {
-    const gpuGrid = document.querySelector('.gpu-grid');
-    if (gpuGrid) {
-        gpuGrid.innerHTML = `
-            <div class="loading-container">
-                <div class="gpu-loader">
-                    <div class="gpu-icon"></div>
-                    <p>Loading GPUs...</p>
-                </div>
-            </div>
-        `;
-    }
+    const loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.style.display = 'flex'; // Show loading screen
 
     try {
         const response = await fetch('./gpu_data.json');
@@ -35,10 +26,15 @@ async function initializeApp() {
         updateGPUGrid();
     } catch (error) {
         console.error('Error loading GPU data:', error);
-        
-        if (gpuGrid) {
-            gpuGrid.innerHTML = '<div class="error-message">Error loading GPU data. Please try again later.</div>';
-        }
+        document.querySelector('.gpu-grid').innerHTML = 
+            '<div class="error-message">Error loading GPU data. Please try again later.</div>';
+    } finally {
+        setTimeout(() => {
+            loadingOverlay.style.opacity = '0'; // Fade out effect
+            setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+            }, 500); // Give time for fade-out animation
+        }, 1000); // Keep loading visible for a second to avoid sudden jumps
     }
 }
 
