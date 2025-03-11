@@ -824,7 +824,6 @@ body {
     background: var(--primary);
 }
 
-/* Full-page overlay */
 #loading-overlay {
     position: fixed;
     top: 0;
@@ -843,7 +842,6 @@ body {
     transition: opacity 0.5s ease-in-out;
 }
 
-/* GPU Loader SVG */
 .gpu-loader svg {
     width: 120px;
     height: 120px;
@@ -854,15 +852,14 @@ body {
 
 /* Animated outline effect */
 .gpu-outline {
-    stroke-dasharray: 100; /* Length of the stroke */
-    stroke-dashoffset: 100; /* Start fully hidden */
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
     animation: outlineDraw 2s linear infinite;
 }
 
-/* Outline animation */
 @keyframes outlineDraw {
     0% {
-        stroke-dashoffset: 100;
+        stroke-dashoffset: 300;
         stroke: #00ff88;
     }
     50% {
@@ -870,13 +867,7 @@ body {
         stroke: #00aaff;
     }
     100% {
-        stroke-dashoffset: -100;
+        stroke-dashoffset: -300;
         stroke: #00ff88;
     }
-}
-
-/* Smooth Fade-in */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
