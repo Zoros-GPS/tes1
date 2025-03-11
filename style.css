@@ -925,10 +925,3 @@ body {
     border-color: #1f6feb;
     color: white;
 }
-
-.gpu-card {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    padding: 16px;
-}
