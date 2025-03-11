@@ -17,6 +17,15 @@ const gpuData = [
         "Price": 69999.0,
         "Retailer": "RPTech",
         "Link": "#"
+    },
+    {
+        "Brand": "NVIDIA",
+        "Series": "RTX 2000",
+        "Card": "RTX 2080",
+        "Model": "NVIDIA GeForce RTX 2080 FE",
+        "Price": 79999.0,
+        "Retailer": "RPTech",
+        "Link": "#"
     }
     // Add all your GPU data here
 ];
