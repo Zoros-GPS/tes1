@@ -11,7 +11,7 @@ function sanitizeInput(input) {
 }
 
 function searchGPUs() {
-    const searchInput = document.getElementById("gpu-search");
+    const searchInput = document.querySelector(".search-input");
     const clearButton = document.getElementById("clear-search");
 
     searchQuery = sanitizeInput(searchInput.value.trim());
@@ -26,7 +26,7 @@ function searchGPUs() {
 }
 
 function clearSearch() {
-    document.getElementById("gpu-search").value = "";
+    document.querySelector(".search-input").value = "";
     document.getElementById("clear-search").style.display = "none";
     searchQuery = "";
     updateGPUGrid(); // Reset & refresh
