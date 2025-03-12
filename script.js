@@ -125,24 +125,15 @@ function updateSeriesFilters() {
     
     // Clear existing filters
     filterGroup.innerHTML = '';
-
-     // Create a select dropdown for series
-    const seriesDropdown = document.createElement('select');
-    seriesDropdown.className = 'series-dropdown';
-    seriesDropdown.innerHTML = `<option value="">Select Series</option>`;
     
+    // Add new series filters
     uniqueSeries.forEach(series => {
-        const option = document.createElement('option');
-        option.value = series;
-        option.textContent = series;
-        seriesDropdown.appendChild(option);
-    });
-
-    filterGroup.appendChild(seriesDropdown);
-
-    seriesDropdown.addEventListener('change', function () {
-        updateCardFilters(this.value); // Pass the selected series
-        updateGPUGrid();
+        const button = document.createElement('button');
+        button.className = 'filter-button';
+        button.setAttribute('role', 'checkbox');
+        button.setAttribute('aria-checked', 'false');
+        button.textContent = series;
+        filterGroup.appendChild(button);
     });
 }
 
@@ -160,38 +151,22 @@ function getUniqueCards() {
     )].sort();
 }
 
-function updateCardFilters(selectedSeries = "") {
+function updateCardFilters() {
+    const uniqueCards = getUniqueCards();
     const filterGroup = document.querySelector('.filter-group[aria-label="GPU Cards"]');
     if (!filterGroup) return;
-
+    
     // Clear existing filters
     filterGroup.innerHTML = '';
-
-    if (!selectedSeries) return; // If no series is selected, don't show models
-
-    const uniqueCards = [...new Set(gpuData
-        .filter(gpu => gpu.Brand.toUpperCase() === currentBrand.toUpperCase() && gpu.Series === selectedSeries)
-        .map(gpu => gpu.Card)
-        .filter(card => card && card.trim() !== '')
-    )].sort();
-
-    // Create a select dropdown for cards
-    const cardDropdown = document.createElement('select');
-    cardDropdown.className = 'card-dropdown';
-    cardDropdown.innerHTML = `<option value="">Select Model</option>`;
-
+    
+    // Add new card filters
     uniqueCards.forEach(card => {
-        const option = document.createElement('option');
-        option.value = card;
-        option.textContent = card;
-        cardDropdown.appendChild(option);
-    });
-
-    filterGroup.appendChild(cardDropdown);
-
-    // Add event listener to update GPU grid when a model is selected
-    cardDropdown.addEventListener('change', function () {
-        updateGPUGrid();
+        const button = document.createElement('button');
+        button.className = 'filter-button';
+        button.setAttribute('role', 'checkbox');
+        button.setAttribute('aria-checked', 'false');
+        button.textContent = card;
+        filterGroup.appendChild(button);
     });
 }
 
@@ -201,16 +176,11 @@ function getActiveFilters() {
         cards: []
     };
 
-    const seriesDropdown = document.querySelector('.series-dropdown');
-    if (seriesDropdown && seriesDropdown.value) {
-        filters.series.push(seriesDropdown.value);
-    }
+    document.querySelectorAll('.filter-group[aria-label="GPU Series"] .filter-button.active')
+        .forEach(button => filters.series.push(button.textContent.trim()));
 
-    // Get selected model from dropdown
-    const cardDropdown = document.querySelector('.card-dropdown');
-    if (cardDropdown && cardDropdown.value) {
-        filters.cards.push(cardDropdown.value);
-    }
+    document.querySelectorAll('.filter-group[aria-label="GPU Cards"] .filter-button.active')
+        .forEach(button => filters.cards.push(button.textContent.trim()));
 
     return filters;
 }
