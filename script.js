@@ -4,6 +4,7 @@ const itemsPerPage = 21; // Display 20 per page
 let currentPage = 1;
 let currentSort = 'default';
 let searchQuery = "";
+let activeSeries = null; // Track which series is active
 
 function sanitizeInput(input) {
     // Prevent XSS by removing special characters
@@ -12,15 +13,10 @@ function sanitizeInput(input) {
 
 function searchGPUs() {
     const searchInput = document.querySelector(".search-input");
-    const clearButton = document.getElementById("clear-search");
-
     searchQuery = sanitizeInput(searchInput.value.trim());
-
-    currentPage =1;
-
+    currentPage = 1;
     updateGPUGrid(); // Reset page & update grid
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the app
@@ -44,69 +40,46 @@ document.addEventListener('DOMContentLoaded', function() {
             const brandSpan = tab.querySelector('span');
             if (brandSpan) {
                 currentBrand = brandSpan.textContent;
+                activeSeries = null; // Reset active series when brand changes
                 updateSeriesFilters();
-                updateCardFilters();
+                hideAllCardFilters(); // Hide card filters when brand changes
                 updateGPUGrid();
             }
         });
     }
 
-    // Series Filter functionality
-    const seriesFilter = document.querySelector('.filter-group[aria-label="GPU Series"]');
-    if (seriesFilter) {
-        seriesFilter.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-button')) {
-                const button = e.target;
-                const filterGroup = button.closest('.filter-group');
-                
-                // Handle exclusive selection
-                if (filterGroup.getAttribute('data-exclusive') === 'true') {
-                    filterGroup.querySelectorAll('.filter-button').forEach(btn => {
-                        if (btn !== button) {
-                            btn.classList.remove('active');
-                            btn.setAttribute('aria-checked', 'false');
-                        }
-                    });
-                }
-                
-                button.classList.toggle('active');
-                button.setAttribute('aria-checked', button.classList.contains('active'));
-
-                currentPage=1
-                
-                // Update card filters immediately after series selection
-                updateCardFilters();
+    // Setup search clear button
+    const clearButton = document.getElementById("clear-search");
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            const searchInput = document.querySelector(".search-input");
+            if (searchInput) {
+                searchInput.value = "";
+                searchQuery = "";
+                currentPage = 1;
                 updateGPUGrid();
             }
         });
     }
 
-    // Card Filter functionality
-    const cardFilter = document.querySelector('.filter-group[aria-label="GPU Cards"]');
-    if (cardFilter) {
-        cardFilter.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-button')) {
-                const button = e.target;
-                const filterGroup = button.closest('.filter-group');
-                
-                // Handle exclusive selection
-                if (filterGroup.getAttribute('data-exclusive') === 'true') {
-                    filterGroup.querySelectorAll('.filter-button').forEach(btn => {
-                        if (btn !== button) {
-                            btn.classList.remove('active');
-                            btn.setAttribute('aria-checked', 'false');
-                        }
-                    });
-                }
-                
-                button.classList.toggle('active');
-                button.setAttribute('aria-checked', button.classList.contains('active'));
-                
-                // Update grid immediately after card selection
-                currentPage = 1
-                updateGPUGrid();
-            }
+    // Add event listener for sort buttons
+    document.querySelectorAll('[data-sort]').forEach(button => {
+        button.addEventListener('click', function() {
+            const sortOrder = this.getAttribute('data-sort');
+            sortGPUs(sortOrder);
         });
+    });
+
+    // Add event listeners for pagination
+    const prevButton = document.getElementById("prev");
+    const nextButton = document.getElementById("next");
+    
+    if (prevButton) {
+        prevButton.addEventListener('click', prevPage);
+    }
+    
+    if (nextButton) {
+        nextButton.addEventListener('click', nextPage);
     }
 });
 
@@ -120,67 +93,148 @@ function getUniqueSeries() {
 
 function updateSeriesFilters() {
     const uniqueSeries = getUniqueSeries();
-    const filterGroup = document.querySelector('.filter-group[aria-label="GPU Series"]');
-    if (!filterGroup) return;
+    const seriesContainer = document.querySelector('.filter-group[aria-label="GPU Series"]');
+    if (!seriesContainer) return;
     
     // Clear existing filters
-    filterGroup.innerHTML = '';
+    seriesContainer.innerHTML = '';
     
-    // Add new series filters
+    // Create series buttons
     uniqueSeries.forEach(series => {
-        const button = document.createElement('button');
-        button.className = 'filter-button';
-        button.setAttribute('role', 'checkbox');
-        button.setAttribute('aria-checked', 'false');
-        button.textContent = series;
-        filterGroup.appendChild(button);
+        const seriesWrapper = document.createElement('div');
+        seriesWrapper.className = 'series-wrapper';
+        seriesWrapper.dataset.series = series;
+        
+        const seriesButton = document.createElement('button');
+        seriesButton.className = 'filter-button series-button';
+        seriesButton.textContent = series;
+        seriesButton.setAttribute('aria-expanded', 'false');
+        seriesButton.addEventListener('click', () => toggleSeriesDropdown(series));
+        
+        // Create container for card filters (initially hidden)
+        const cardsContainer = document.createElement('div');
+        cardsContainer.className = 'cards-container hidden';
+        cardsContainer.setAttribute('aria-label', `${series} Cards`);
+        
+        seriesWrapper.appendChild(seriesButton);
+        seriesWrapper.appendChild(cardsContainer);
+        seriesContainer.appendChild(seriesWrapper);
     });
 }
 
-function getUniqueCards() {
-    const activeFilters = getActiveFilters();
+function toggleSeriesDropdown(series) {
+    // If this series is already active, just close it
+    if (activeSeries === series) {
+        hideCardFilters(series);
+        activeSeries = null;
+        document.querySelectorAll('.series-button').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-expanded', 'false');
+        });
+        return;
+    }
+    
+    // Hide all card filters first
+    hideAllCardFilters();
+    
+    // Set this series as active
+    activeSeries = series;
+    
+    // Update UI to show this series as active
+    document.querySelectorAll('.series-button').forEach(btn => {
+        const isActive = btn.textContent === series;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+    });
+    
+    // Update and show card filters for this series
+    updateCardFiltersForSeries(series);
+    
+    // Update the grid based on the selected series
+    currentPage = 1;
+    updateGPUGrid();
+}
+
+function hideAllCardFilters() {
+    document.querySelectorAll('.cards-container').forEach(container => {
+        container.classList.add('hidden');
+    });
+}
+
+function hideCardFilters(series) {
+    const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${series}"]`);
+    if (seriesWrapper) {
+        const cardsContainer = seriesWrapper.querySelector('.cards-container');
+        if (cardsContainer) {
+            cardsContainer.classList.add('hidden');
+        }
+    }
+}
+
+function getCardsForSeries(series) {
     return [...new Set(gpuData
-        .filter(gpu => {
-            const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
-            const seriesMatch = activeFilters.series.length === 0 || 
-                              activeFilters.series.includes(gpu.Series);
-            return brandMatch && seriesMatch;
-        })
+        .filter(gpu => 
+            gpu.Brand.toUpperCase() === currentBrand.toUpperCase() && 
+            gpu.Series === series
+        )
         .map(gpu => gpu.Card)
         .filter(card => card && card.trim() !== '')
     )].sort();
 }
 
-function updateCardFilters() {
-    const uniqueCards = getUniqueCards();
-    const filterGroup = document.querySelector('.filter-group[aria-label="GPU Cards"]');
-    if (!filterGroup) return;
+function updateCardFiltersForSeries(series) {
+    const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${series}"]`);
+    if (!seriesWrapper) return;
     
-    // Clear existing filters
-    filterGroup.innerHTML = '';
+    const cardsContainer = seriesWrapper.querySelector('.cards-container');
+    if (!cardsContainer) return;
     
-    // Add new card filters
-    uniqueCards.forEach(card => {
-        const button = document.createElement('button');
-        button.className = 'filter-button';
-        button.setAttribute('role', 'checkbox');
-        button.setAttribute('aria-checked', 'false');
-        button.textContent = card;
-        filterGroup.appendChild(button);
+    // Clear existing card filters
+    cardsContainer.innerHTML = '';
+    
+    // Get cards for this series
+    const seriesCards = getCardsForSeries(series);
+    
+    // Create card filter buttons
+    seriesCards.forEach(card => {
+        const cardButton = document.createElement('button');
+        cardButton.className = 'filter-button card-button';
+        cardButton.setAttribute('role', 'checkbox');
+        cardButton.setAttribute('aria-checked', 'false');
+        cardButton.textContent = card;
+        
+        cardButton.addEventListener('click', function() {
+            // Toggle active state
+            this.classList.toggle('active');
+            this.setAttribute('aria-checked', this.classList.contains('active'));
+            
+            // Update grid immediately
+            currentPage = 1;
+            updateGPUGrid();
+        });
+        
+        cardsContainer.appendChild(cardButton);
     });
+    
+    // Show this card container
+    cardsContainer.classList.remove('hidden');
 }
 
 function getActiveFilters() {
     const filters = {
-        series: [],
+        series: activeSeries ? [activeSeries] : [],
         cards: []
     };
 
-    document.querySelectorAll('.filter-group[aria-label="GPU Series"] .filter-button.active')
-        .forEach(button => filters.series.push(button.textContent.trim()));
-
-    document.querySelectorAll('.filter-group[aria-label="GPU Cards"] .filter-button.active')
-        .forEach(button => filters.cards.push(button.textContent.trim()));
+    // Only collect active card filters if we have an active series
+    if (activeSeries) {
+        const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${activeSeries}"]`);
+        if (seriesWrapper) {
+            seriesWrapper.querySelectorAll('.card-button.active').forEach(button => {
+                filters.cards.push(button.textContent.trim());
+            });
+        }
+    }
 
     return filters;
 }
@@ -192,7 +246,14 @@ function filterGPUs(gpus, filters) {
                            filters.series.includes(gpu.Series);
         const cardMatch = filters.cards.length === 0 ||
                          filters.cards.includes(gpu.Card);
-        return brandMatch && seriesMatch && cardMatch;
+        
+        // Apply search filter if there's a search query
+        const searchMatch = !searchQuery || 
+                          gpu.Card.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          gpu.Model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          gpu.Brand.toLowerCase().includes(searchQuery.toLowerCase());
+        
+        return brandMatch && seriesMatch && cardMatch && searchMatch;
     });
 }
 
@@ -204,22 +265,8 @@ function updateGPUGrid() {
 
     const filters = getActiveFilters();
     let filteredGPUs = filterGPUs(gpuData, filters);
-    console.log(typeof(filteredGPUs))
-    let filteredGPUss = {}
     
     gpuGrid.innerHTML = '';
-
-    if (searchQuery) {
-        filteredGPUss = filteredGPUs.filter(gpu =>
-            gpu.Card.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            gpu.Model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            gpu.Brand.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }
-
-    if(filteredGPUss){
-          filteredGPUs =filteredGPUss
-    }
 
     if (currentSort === "high") {
         filteredGPUs.sort((a, b) => b.Price - a.Price); // High to Low
@@ -227,9 +274,7 @@ function updateGPUGrid() {
         filteredGPUs.sort((a, b) => a.Price - b.Price); // Low to High
     }
 
-    num = filteredGPUs.length; // ✅ Update num dynamically
-    totalItems = num;
-
+    const totalItems = filteredGPUs.length;
 
     if (filteredGPUs.length === 0) {
         gpuGrid.innerHTML = '<div class="no-results">No GPUs found matching the selected filters or search results</div>';
@@ -241,7 +286,6 @@ function updateGPUGrid() {
     const start = (currentPage - 1) * itemsPerPage;
     const paginatedGPUs = filteredGPUs.slice(start, start + itemsPerPage);
 
-
     paginatedGPUs.forEach(gpu => {
         const card = createGPUCard(gpu);
         gpuGrid.appendChild(card);
@@ -250,14 +294,14 @@ function updateGPUGrid() {
     const sectionTitle = document.querySelector('.section-title');
     if (sectionTitle) {
         const seriesText = filters.series.length > 0 ? filters.series[0] : '';
-        const cardText = filters.cards.length > 0 ? ` - ${filters.cards[0]}` : '';
+        const cardText = filters.cards.length > 0 ? ` - ${filters.cards.join(', ')}` : '';
         sectionTitle.textContent = `${currentBrand} ${seriesText}${cardText} (${filteredGPUs.length} cards)`;
     }
 
-     // Update pagination controls
-     pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(totalItems / itemsPerPage)}`;
-     document.getElementById("prev").disabled = currentPage === 1;
-     document.getElementById("next").disabled = currentPage === Math.ceil(totalItems / itemsPerPage);
+    // Update pagination controls
+    pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(totalItems / itemsPerPage)}`;
+    document.getElementById("prev").disabled = currentPage === 1;
+    document.getElementById("next").disabled = currentPage === Math.ceil(totalItems / itemsPerPage) || totalItems === 0;
 }
 
 function createGPUCard(gpu) {
@@ -310,7 +354,6 @@ async function initializeApp() {
         }
 
         updateSeriesFilters();
-        updateCardFilters();
         updateGPUGrid();
 
     } catch (error) {
@@ -331,25 +374,23 @@ async function initializeApp() {
     }
 }
 
-
 function nextPage() {
-            if (currentPage < totalItems / itemsPerPage) {
-                currentPage++;
-                updateGPUGrid();
-            }
-        }
+    const totalItems = filterGPUs(gpuData, getActiveFilters()).length;
+    if (currentPage < Math.ceil(totalItems / itemsPerPage)) {
+        currentPage++;
+        updateGPUGrid();
+    }
+}
 
 function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                updateGPUGrid();
-            }
-        }
+    if (currentPage > 1) {
+        currentPage--;
+        updateGPUGrid();
+    }
+}
 
 function sortGPUs(order) {
-            currentSort = order;
-            currentPage = 1;
-            updateGPUGrid(true); // Re-render with sorting
-        }
-
-
+    currentSort = order;
+    currentPage = 1;
+    updateGPUGrid();
+}
