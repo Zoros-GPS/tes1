@@ -216,7 +216,7 @@ function updateGPUGrid() {
     if (!gpuGrid || !pageInfo) return;
 
     const filters = getActiveFilters();
-    const filteredGPUs = filterGPUs(gpuData, filters);
+    let filteredGPUs = filterGPUs(gpuData, filters);
     
     gpuGrid.innerHTML = '';
 
@@ -227,6 +227,7 @@ function updateGPUGrid() {
             gpu.Brand.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }
+
 
     if (currentSort === "high") {
         filteredGPUs.sort((a, b) => b.Price - a.Price); // High to Low
