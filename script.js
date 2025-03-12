@@ -204,17 +204,22 @@ function updateGPUGrid() {
 
     const filters = getActiveFilters();
     let filteredGPUs = filterGPUs(gpuData, filters);
+    console.log(typeof(filteredGPUs))
+    let filteredGPUss 
     
     gpuGrid.innerHTML = '';
 
     if (searchQuery) {
-        filteredGPUs = filteredGPUs.filter(gpu =>
+        filteredGPUss = filteredGPUs.filter(gpu =>
             gpu.Card.toLowerCase().includes(searchQuery.toLowerCase()) ||
             gpu.Model.toLowerCase().includes(searchQuery.toLowerCase()) ||
             gpu.Brand.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }
 
+    if(filteredGPUss){
+          filteredGPUs =filteredGPUss
+    }
 
     if (currentSort === "high") {
         filteredGPUs.sort((a, b) => b.Price - a.Price); // High to Low
