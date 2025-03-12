@@ -1,7 +1,8 @@
 let gpuData = [];
 let currentBrand = 'NVIDIA'; // Assume 1000 items
-const itemsPerPage = 20; // Display 20 per page
+const itemsPerPage = 21; // Display 20 per page
 let currentPage = 1;
+let currentSort = 'default';
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -189,6 +190,12 @@ function updateGPUGrid() {
     
     gpuGrid.innerHTML = '';
 
+    if (currentSort === "high") {
+        filteredGPUs.sort((a, b) => b.Price - a.Price); // High to Low
+    } else if (currentSort === "low") {
+        filteredGPUs.sort((a, b) => a.Price - b.Price); // Low to High
+    }
+
     num = filteredGPUs.length; // ✅ Update num dynamically
     totalItems = num;
 
@@ -308,5 +315,9 @@ function prevPage() {
             }
         }
 
+function sortGPUs(order) {
+            currentSort = order;
+            updateGPUGrid(true); // Re-render with sorting
+        }
 
 
