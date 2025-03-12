@@ -1,9 +1,10 @@
 let gpuData = [];
 let currentBrand = 'NVIDIA';
+let num = 0;
 const totalItems = num; // Assume 1000 items
 const itemsPerPage = 20; // Display 20 per page
 let currentPage = 1;
-let num = 0;
+
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the app
