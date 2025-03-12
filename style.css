@@ -376,18 +376,6 @@ body {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-.filter-drawer {
-    max-height: 0;          /* collapsed */
-    overflow: hidden;       /* hide content when collapsed */
-    transition: max-height 0.3s ease;
-    background-color: #1a1a1a; /* match your theme */
-    margin: 0 1rem;         /* example side spacing */
-  }
-  
-  /* Drawer "open" state */
-  .filter-drawer.show {
-    max-height: 600px; /* or something large enough to show all filters */
-  }
   
   /* Toggle Button */
   .filter-toggle {
@@ -628,9 +616,9 @@ body {
     }
 
     .title{
-        font-size: 2rem;
+        font-size: 3.5rem;
     }
-    
+
 
     .header {
         padding: 12px var(--space-md);
@@ -691,6 +679,19 @@ body {
       }
       #intel-tab {
         background-color: #0071c5;
+      }
+
+      .filter-drawer {
+        max-height: 0;          /* collapsed */
+        overflow: hidden;       /* hide content when collapsed */
+        transition: max-height 0.3s ease;
+        background-color: #1a1a1a; /* match your theme */
+        margin: 0 1rem;         /* example side spacing */
+      }
+      
+      /* Drawer "open" state */
+      .filter-drawer.show {
+        max-height: 600px; /* or something large enough to show all filters */
       }
 
       .search-container {
