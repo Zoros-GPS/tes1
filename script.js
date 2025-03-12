@@ -1,7 +1,5 @@
 let gpuData = [];
-let currentBrand = 'NVIDIA';
-let num = 0;
-const totalItems = num; // Assume 1000 items
+let currentBrand = 'NVIDIA'; // Assume 1000 items
 const itemsPerPage = 20; // Display 20 per page
 let currentPage = 1;
 
@@ -194,6 +192,9 @@ function updateGPUGrid() {
         return;
     }
 
+    num = filteredGPUs.length; // ✅ Update num dynamically
+    totalItems = num;
+
     filteredGPUs.forEach(gpu => {
         const card = createGPUCard(gpu);
         gpuGrid.appendChild(card);
@@ -203,7 +204,6 @@ function updateGPUGrid() {
     if (sectionTitle) {
         const seriesText = filters.series.length > 0 ? filters.series[0] : '';
         const cardText = filters.cards.length > 0 ? ` - ${filters.cards[0]}` : '';
-        num = filteredGPUs.length;
         sectionTitle.textContent = `${currentBrand} ${seriesText}${cardText} (${filteredGPUs.length} cards)`;
     }
 }
