@@ -16,22 +16,9 @@ function searchGPUs() {
 
     searchQuery = sanitizeInput(searchInput.value.trim());
 
-    if (searchQuery.length > 0) {
-        clearButton.style.display = "block"; // Show clear button
-    } else {
-        clearButton.style.display = "none"; // Hide clear button
-    }
-
     currentPage =1;
 
     updateGPUGrid(); // Reset page & update grid
-}
-
-function clearSearch() {
-    document.querySelector(".search-input").value = "";
-    document.getElementById("clear-search").style.display = "none";
-    searchQuery = "";
-    updateGPUGrid(); // Reset & refresh
 }
 
 
