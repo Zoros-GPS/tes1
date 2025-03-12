@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateSeriesFilters();
                 updateCardFilters();
                 updateGPUGrid();
-                renderPage();
             }
         });
     }
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update card filters immediately after series selection
                 updateCardFilters();
                 updateGPUGrid();
-                renderPage();
             }
         });
     }
@@ -86,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Update grid immediately after card selection
                 updateGPUGrid();
-                renderPage();
             }
         });
     }
@@ -180,22 +177,31 @@ function filterGPUs(gpus, filters) {
 
 function updateGPUGrid() {
     const gpuGrid = document.querySelector('.gpu-grid');
-    if (!gpuGrid) return;
+    const pageInfo = document.getElementById("page-info");
+
+    if (!gpuGrid || !pageInfo) return;
 
     const filters = getActiveFilters();
     const filteredGPUs = filterGPUs(gpuData, filters);
     
     gpuGrid.innerHTML = '';
 
-    if (filteredGPUs.length === 0) {
-        gpuGrid.innerHTML = '<div class="no-results">No GPUs found matching the selected filters</div>';
-        return;
-    }
-
     num = filteredGPUs.length; // ✅ Update num dynamically
     totalItems = num;
 
-    filteredGPUs.forEach(gpu => {
+
+    if (filteredGPUs.length === 0) {
+        gpuGrid.innerHTML = '<div class="no-results">No GPUs found matching the selected filters</div>';
+        pageInfo.textContent = 'No results found';
+        return;
+    }
+
+    // Pagination logic
+    const start = (currentPage - 1) * itemsPerPage;
+    const paginatedGPUs = filteredGPUs.slice(start, start + itemsPerPage);
+
+
+    paginatedGPUs.forEach(gpu => {
         const card = createGPUCard(gpu);
         gpuGrid.appendChild(card);
     });
@@ -206,6 +212,11 @@ function updateGPUGrid() {
         const cardText = filters.cards.length > 0 ? ` - ${filters.cards[0]}` : '';
         sectionTitle.textContent = `${currentBrand} ${seriesText}${cardText} (${filteredGPUs.length} cards)`;
     }
+
+     // Update pagination controls
+     pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(totalItems / itemsPerPage)}`;
+     document.getElementById("prev").disabled = currentPage === 1;
+     document.getElementById("next").disabled = currentPage === Math.ceil(totalItems / itemsPerPage);
 }
 
 function createGPUCard(gpu) {
@@ -260,7 +271,7 @@ async function initializeApp() {
         updateSeriesFilters();
         updateCardFilters();
         updateGPUGrid();
-        renderPage();
+
     } catch (error) {
         console.error('Error loading GPU data:', error);
         const gpuGrid = document.querySelector('.gpu-grid');
@@ -279,34 +290,18 @@ async function initializeApp() {
     }
 }
 
-function getData(page) {
-            const start = (page - 1) * itemsPerPage;
-            return Array.from({ length: itemsPerPage }, (_, i) => `Card ${start + i + 1}`);
-        }
-
-function renderPage() {
-            const list = document.querySelector('.gpu-grid');
-            const pageInfo = document.getElementById("page-info");
-            const items = getData(currentPage);
-
-            list.innerHTML = items.map(item => `<div class="card">${item}</div>`).join("");
-            pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(totalItems / itemsPerPage)}`;
-
-            document.getElementById("prev").disabled = currentPage === 1;
-            document.getElementById("next").disabled = currentPage === Math.ceil(totalItems / itemsPerPage);
-        }
 
 function nextPage() {
             if (currentPage < totalItems / itemsPerPage) {
                 currentPage++;
-                renderPage();
+                updateGPUGrid();
             }
         }
 
 function prevPage() {
             if (currentPage > 1) {
                 currentPage--;
-                renderPage();
+                updateGPUGrid();
             }
         }
 
