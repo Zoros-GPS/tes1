@@ -4,7 +4,7 @@ const itemsPerPage = 21; // Display 20 per page
 let currentPage = 1;
 let currentSort = 'default';
 let searchQuery = "";
-let activeSeries = null; // Track which series is active
+let selectedSeries = []; // Track which series are selected
 
 function sanitizeInput(input) {
     // Prevent XSS by removing special characters
@@ -40,9 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const brandSpan = tab.querySelector('span');
             if (brandSpan) {
                 currentBrand = brandSpan.textContent;
-                activeSeries = null; // Reset active series when brand changes
+                selectedSeries = []; // Reset selected series when brand changes
                 updateSeriesFilters();
-                hideAllCardFilters(); // Hide card filters when brand changes
                 updateGPUGrid();
             }
         });
@@ -93,11 +92,24 @@ function getUniqueSeries() {
 
 function updateSeriesFilters() {
     const uniqueSeries = getUniqueSeries();
-    const seriesContainer = document.querySelector('.filter-group[aria-label="GPU Series"]');
-    if (!seriesContainer) return;
+    const filterContainer = document.querySelector('.filters-container');
+    if (!filterContainer) return;
     
     // Clear existing filters
-    seriesContainer.innerHTML = '';
+    filterContainer.innerHTML = '';
+    
+    // Create series section
+    const seriesSection = document.createElement('div');
+    seriesSection.className = 'filter-section';
+    
+    const seriesHeading = document.createElement('h3');
+    seriesHeading.className = 'filter-heading';
+    seriesHeading.textContent = 'GPU Series';
+    seriesSection.appendChild(seriesHeading);
+    
+    const seriesGroup = document.createElement('div');
+    seriesGroup.className = 'filter-group';
+    seriesGroup.setAttribute('aria-label', 'GPU Series');
     
     // Create series buttons
     uniqueSeries.forEach(series => {
@@ -106,10 +118,17 @@ function updateSeriesFilters() {
         seriesWrapper.dataset.series = series;
         
         const seriesButton = document.createElement('button');
-        seriesButton.className = 'filter-button series-button';
+        seriesButton.className = 'series-button';
         seriesButton.textContent = series;
         seriesButton.setAttribute('aria-expanded', 'false');
-        seriesButton.addEventListener('click', () => toggleSeriesDropdown(series));
+        
+        // Add down arrow icon to series button
+        const arrowIcon = document.createElement('span');
+        arrowIcon.className = 'arrow-icon';
+        arrowIcon.innerHTML = '▼';
+        seriesButton.appendChild(arrowIcon);
+        
+        seriesButton.addEventListener('click', () => toggleSeries(series));
         
         // Create container for card filters (initially hidden)
         const cardsContainer = document.createElement('div');
@@ -118,57 +137,42 @@ function updateSeriesFilters() {
         
         seriesWrapper.appendChild(seriesButton);
         seriesWrapper.appendChild(cardsContainer);
-        seriesContainer.appendChild(seriesWrapper);
+        seriesGroup.appendChild(seriesWrapper);
     });
+    
+    seriesSection.appendChild(seriesGroup);
+    filterContainer.appendChild(seriesSection);
 }
 
-function toggleSeriesDropdown(series) {
-    // If this series is already active, just close it
-    if (activeSeries === series) {
-        hideCardFilters(series);
-        activeSeries = null;
-        document.querySelectorAll('.series-button').forEach(btn => {
-            btn.classList.remove('active');
-            btn.setAttribute('aria-expanded', 'false');
-        });
-        return;
+function toggleSeries(series) {
+    const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${series}"]`);
+    const seriesButton = seriesWrapper.querySelector('.series-button');
+    const cardsContainer = seriesWrapper.querySelector('.cards-container');
+    const isSelected = seriesButton.classList.contains('active');
+    
+    if (isSelected) {
+        // If already selected, deselect it and hide cards
+        seriesButton.classList.remove('active');
+        seriesButton.setAttribute('aria-expanded', 'false');
+        cardsContainer.classList.add('hidden');
+        
+        // Remove from selected series array
+        selectedSeries = selectedSeries.filter(s => s !== series);
+    } else {
+        // If not selected, select it and show cards
+        seriesButton.classList.add('active');
+        seriesButton.setAttribute('aria-expanded', 'true');
+        
+        // Add to selected series array
+        selectedSeries.push(series);
+        
+        // Update and show card filters for this series
+        updateCardFiltersForSeries(series);
     }
-    
-    // Hide all card filters first
-    hideAllCardFilters();
-    
-    // Set this series as active
-    activeSeries = series;
-    
-    // Update UI to show this series as active
-    document.querySelectorAll('.series-button').forEach(btn => {
-        const isActive = btn.textContent === series;
-        btn.classList.toggle('active', isActive);
-        btn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
-    });
-    
-    // Update and show card filters for this series
-    updateCardFiltersForSeries(series);
     
     // Update the grid based on the selected series
     currentPage = 1;
     updateGPUGrid();
-}
-
-function hideAllCardFilters() {
-    document.querySelectorAll('.cards-container').forEach(container => {
-        container.classList.add('hidden');
-    });
-}
-
-function hideCardFilters(series) {
-    const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${series}"]`);
-    if (seriesWrapper) {
-        const cardsContainer = seriesWrapper.querySelector('.cards-container');
-        if (cardsContainer) {
-            cardsContainer.classList.add('hidden');
-        }
-    }
 }
 
 function getCardsForSeries(series) {
@@ -198,7 +202,7 @@ function updateCardFiltersForSeries(series) {
     // Create card filter buttons
     seriesCards.forEach(card => {
         const cardButton = document.createElement('button');
-        cardButton.className = 'filter-button card-button';
+        cardButton.className = 'card-button';
         cardButton.setAttribute('role', 'checkbox');
         cardButton.setAttribute('aria-checked', 'false');
         cardButton.textContent = card;
@@ -222,30 +226,55 @@ function updateCardFiltersForSeries(series) {
 
 function getActiveFilters() {
     const filters = {
-        series: activeSeries ? [activeSeries] : [],
+        series: [...selectedSeries],
         cards: []
     };
 
-    // Only collect active card filters if we have an active series
-    if (activeSeries) {
-        const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${activeSeries}"]`);
+    // Collect active card filters for all selected series
+    selectedSeries.forEach(series => {
+        const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${series}"]`);
         if (seriesWrapper) {
-            seriesWrapper.querySelectorAll('.card-button.active').forEach(button => {
-                filters.cards.push(button.textContent.trim());
-            });
+            const activeCards = Array.from(seriesWrapper.querySelectorAll('.card-button.active'))
+                .map(button => button.textContent.trim());
+            
+            // If no cards are selected for this series, show all cards of this series
+            if (activeCards.length === 0) {
+                // Add all cards for this series
+                const allSeriesCards = getCardsForSeries(series);
+                filters.cards.push(...allSeriesCards);
+            } else {
+                // Add only selected cards
+                filters.cards.push(...activeCards);
+            }
         }
-    }
+    });
 
     return filters;
 }
 
 function filterGPUs(gpus, filters) {
+    // If no series selected, show all for current brand
+    if (filters.series.length === 0) {
+        return gpus.filter(gpu => {
+            const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
+            
+            // Apply search filter if there's a search query
+            const searchMatch = !searchQuery || 
+                              gpu.Card.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              gpu.Model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              gpu.Brand.toLowerCase().includes(searchQuery.toLowerCase());
+            
+            return brandMatch && searchMatch;
+        });
+    }
+    
+    // If series are selected, filter by series and cards
     return gpus.filter(gpu => {
         const brandMatch = gpu.Brand.toUpperCase() === currentBrand.toUpperCase();
-        const seriesMatch = filters.series.length === 0 || 
-                           filters.series.includes(gpu.Series);
-        const cardMatch = filters.cards.length === 0 ||
-                         filters.cards.includes(gpu.Card);
+        const seriesMatch = filters.series.includes(gpu.Series);
+        
+        // For cards, check if this card is in our filtered cards list
+        const cardMatch = filters.cards.includes(gpu.Card);
         
         // Apply search filter if there's a search query
         const searchMatch = !searchQuery || 
@@ -293,9 +322,28 @@ function updateGPUGrid() {
 
     const sectionTitle = document.querySelector('.section-title');
     if (sectionTitle) {
-        const seriesText = filters.series.length > 0 ? filters.series[0] : '';
-        const cardText = filters.cards.length > 0 ? ` - ${filters.cards.join(', ')}` : '';
-        sectionTitle.textContent = `${currentBrand} ${seriesText}${cardText} (${filteredGPUs.length} cards)`;
+        let titleText = currentBrand;
+        
+        if (filters.series.length === 1) {
+            titleText += ` ${filters.series[0]}`;
+            
+            // Count active card filters for this series
+            const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${filters.series[0]}"]`);
+            if (seriesWrapper) {
+                const activeCardCount = seriesWrapper.querySelectorAll('.card-button.active').length;
+                if (activeCardCount > 0) {
+                    const cardNames = Array.from(seriesWrapper.querySelectorAll('.card-button.active'))
+                        .map(btn => btn.textContent.trim())
+                        .join(', ');
+                    titleText += ` - ${cardNames}`;
+                }
+            }
+        } else if (filters.series.length > 1) {
+            titleText += ` (${filters.series.length} Series)`;
+        }
+        
+        titleText += ` (${filteredGPUs.length} cards)`;
+        sectionTitle.textContent = titleText;
     }
 
     // Update pagination controls
