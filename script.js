@@ -12,7 +12,6 @@ function sanitizeInput(input) {
 
 function searchGPUs() {
     const searchInput = document.querySelector(".search-input");
-    const clearButton = document.getElementById("clear-search");
 
     searchQuery = sanitizeInput(searchInput.value.trim());
 
@@ -205,7 +204,7 @@ function updateGPUGrid() {
     const filters = getActiveFilters();
     let filteredGPUs = filterGPUs(gpuData, filters);
     console.log(typeof(filteredGPUs))
-    let filteredGPUss = {}
+    let filteredGPUss 
     
     gpuGrid.innerHTML = '';
 
