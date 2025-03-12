@@ -247,7 +247,6 @@ async function initializeApp() {
         }
 
         updateSeriesFilters();
-        updateCardFilters();
         updateGPUGrid();
 
     } catch (error) {
