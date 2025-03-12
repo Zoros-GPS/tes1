@@ -3,6 +3,34 @@ let currentBrand = 'NVIDIA'; // Assume 1000 items
 const itemsPerPage = 21; // Display 20 per page
 let currentPage = 1;
 let currentSort = 'default';
+let searchQuery = "";
+
+function sanitizeInput(input) {
+    // Prevent XSS by removing special characters
+    return input.replace(/[<>{}()]/g, '');
+}
+
+function searchGPUs() {
+    const searchInput = document.getElementById("gpu-search");
+    const clearButton = document.getElementById("clear-search");
+
+    searchQuery = sanitizeInput(searchInput.value.trim());
+
+    if (searchQuery.length > 0) {
+        clearButton.style.display = "block"; // Show clear button
+    } else {
+        clearButton.style.display = "none"; // Hide clear button
+    }
+
+    updateGPUGrid(); // Reset page & update grid
+}
+
+function clearSearch() {
+    document.getElementById("gpu-search").value = "";
+    document.getElementById("clear-search").style.display = "none";
+    searchQuery = "";
+    updateGPUGrid(); // Reset & refresh
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -190,6 +218,14 @@ function updateGPUGrid() {
     
     gpuGrid.innerHTML = '';
 
+    if (searchQuery) {
+        filteredGPUs = filteredGPUs.filter(gpu =>
+            gpu.Card.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            gpu.Model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            gpu.Brand.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }
+
     if (currentSort === "high") {
         filteredGPUs.sort((a, b) => b.Price - a.Price); // High to Low
     } else if (currentSort === "low") {
@@ -317,6 +353,7 @@ function prevPage() {
 
 function sortGPUs(order) {
             currentSort = order;
+            currentPage = 1;
             updateGPUGrid(true); // Re-render with sorting
         }
 
