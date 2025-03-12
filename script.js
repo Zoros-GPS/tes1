@@ -190,6 +190,10 @@ function updateCardFiltersForSeries(series) {
     const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${series}"]`);
     if (!seriesWrapper) return;
     
+    const cardHeading = document.createElement('h4');
+    cardHeading.className = 'filter-card-heading';
+    cardHeading.textContent = 'Models';
+    
     const cardsContainer = seriesWrapper.querySelector('.cards-container');
     if (!cardsContainer) return;
     
@@ -199,9 +203,7 @@ function updateCardFiltersForSeries(series) {
     // Get cards for this series
     const seriesCards = getCardsForSeries(series);
 
-    const cardHeading = document.createElement('h4');
-    cardHeading.className = 'filter-card-heading';
-    cardHeading.textContent = 'Models';
+    
     
     // Create card filter buttons
     seriesCards.forEach(card => {
