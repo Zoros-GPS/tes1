@@ -285,7 +285,7 @@ function getData(page) {
         }
 
 function renderPage() {
-            const list = document.getElementById("gpu-grid");
+            const list = document.querySelector('.gpu-grid');
             const pageInfo = document.getElementById("page-info");
             const items = getData(currentPage);
 
