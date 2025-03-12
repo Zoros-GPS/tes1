@@ -22,6 +22,8 @@ function searchGPUs() {
         clearButton.style.display = "none"; // Hide clear button
     }
 
+    currentPage =1;
+
     updateGPUGrid(); // Reset page & update grid
 }
 
