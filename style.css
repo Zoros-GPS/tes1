@@ -872,3 +872,26 @@ body {
         stroke: #00ff88;
     }
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination button {
+    border: none;
+    background: #007bff;
+    color: white;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.pagination button:hover {
+    background: #0056b3;
+}
+.pagination button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}

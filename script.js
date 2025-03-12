@@ -1,5 +1,9 @@
 let gpuData = [];
 let currentBrand = 'NVIDIA';
+const totalItems = num; // Assume 1000 items
+const itemsPerPage = 20; // Display 20 per page
+let currentPage = 1;
+let num = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the app
@@ -26,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateSeriesFilters();
                 updateCardFilters();
                 updateGPUGrid();
+                renderPage();
             }
         });
     }
@@ -54,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update card filters immediately after series selection
                 updateCardFilters();
                 updateGPUGrid();
+                renderPage();
             }
         });
     }
@@ -81,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Update grid immediately after card selection
                 updateGPUGrid();
+                renderPage();
             }
         });
     }
@@ -195,6 +202,7 @@ function updateGPUGrid() {
     if (sectionTitle) {
         const seriesText = filters.series.length > 0 ? filters.series[0] : '';
         const cardText = filters.cards.length > 0 ? ` - ${filters.cards[0]}` : '';
+        num = filteredGPUs.length;
         sectionTitle.textContent = `${currentBrand} ${seriesText}${cardText} (${filteredGPUs.length} cards)`;
     }
 }
@@ -251,6 +259,7 @@ async function initializeApp() {
         updateSeriesFilters();
         updateCardFilters();
         updateGPUGrid();
+        renderPage();
     } catch (error) {
         console.error('Error loading GPU data:', error);
         const gpuGrid = document.querySelector('.gpu-grid');
@@ -268,6 +277,37 @@ async function initializeApp() {
         }
     }
 }
+
+function getData(page) {
+            const start = (page - 1) * itemsPerPage;
+            return Array.from({ length: itemsPerPage }, (_, i) => `Card ${start + i + 1}`);
+        }
+
+function renderPage() {
+            const list = document.getElementById("gpu-grid");
+            const pageInfo = document.getElementById("page-info");
+            const items = getData(currentPage);
+
+            list.innerHTML = items.map(item => `<div class="card">${item}</div>`).join("");
+            pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(totalItems / itemsPerPage)}`;
+
+            document.getElementById("prev").disabled = currentPage === 1;
+            document.getElementById("next").disabled = currentPage === Math.ceil(totalItems / itemsPerPage);
+        }
+
+function nextPage() {
+            if (currentPage < totalItems / itemsPerPage) {
+                currentPage++;
+                renderPage();
+            }
+        }
+
+function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        }
 
 
 
