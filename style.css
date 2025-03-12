@@ -503,6 +503,12 @@ body {
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
 }
+.sort-button.active {
+    outline: none;
+    background-color: rgba(30, 33, 58, 0.8);
+    border-color: #ff5252;
+    box-shadow: 0 8px 32px #e86060;
+}
 
 /* 11. Utilities
    ========================================= */

@@ -62,9 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add event listener for sort buttons
-    document.querySelectorAll('[data-sort]').forEach(button => {
+    document.querySelectorAll('.sort-button').forEach(button => {
         button.addEventListener('click', function() {
-            const sortOrder = this.getAttribute('data-sort');
+            // Remove 'active' class from all buttons
+            document.querySelectorAll('.sort-button').forEach(btn => btn.classList.remove('active'));
+            
+            // Add 'active' class to the clicked button
+            this.classList.add('active');
+    
+            // Get the sort order and trigger sorting function
+            const sortOrder = this.getAttribute('data-sort') || this.getAttribute('onclick').match(/'([^']+)'/)[1];
             sortGPUs(sortOrder);
         });
     });
@@ -189,7 +196,7 @@ function getCardsForSeries(series) {
 function updateCardFiltersForSeries(series) {
     const seriesWrapper = document.querySelector(`.series-wrapper[data-series="${series}"]`);
     if (!seriesWrapper) return;
-    
+
     const cardHeading = document.createElement('h4');
     cardHeading.className = 'filter-card-heading';
     cardHeading.textContent = 'Models';
