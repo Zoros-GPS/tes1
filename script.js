@@ -53,6 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 button.classList.toggle('active');
                 button.setAttribute('aria-checked', button.classList.contains('active'));
+
+                currentPage=1
                 
                 // Update card filters immediately after series selection
                 updateCardFilters();
@@ -83,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 button.setAttribute('aria-checked', button.classList.contains('active'));
                 
                 // Update grid immediately after card selection
+                currentPage = 1
                 updateGPUGrid();
             }
         });
