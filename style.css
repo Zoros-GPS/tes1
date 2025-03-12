@@ -518,8 +518,9 @@ body {
 }
 .sort-button.active {
     outline: none;
-    background-color: rgba(30, 33, 58, 0.8);
+    background-color: #7e68ff;
     border-color: var(--primary);
+    color: white;
     box-shadow: 0 8px 32px rgba(108, 78, 217, 0.3);
 }
 
