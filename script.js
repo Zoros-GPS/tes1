@@ -64,17 +64,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add event listener for sort buttons
     document.querySelectorAll('.sort-button').forEach(button => {
         button.addEventListener('click', function() {
+            // Check if this button is already active
+            const isActive = this.classList.contains('active');
+    
             // Remove 'active' class from all buttons
             document.querySelectorAll('.sort-button').forEach(btn => btn.classList.remove('active'));
-            
-            // Add 'active' class to the clicked button
-            this.classList.add('active');
     
-            // Get the sort order and trigger sorting function
-            const sortOrder = this.getAttribute('data-sort') || this.getAttribute('onclick').match(/'([^']+)'/)[1];
-            sortGPUs(sortOrder);
+            // Toggle the clicked button
+            if (!isActive) {
+                this.classList.add('active');
+                const sortOrder = this.getAttribute('data-sort') || this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                sortGPUs(sortOrder);
+            } else {
+                // If clicking again, reset sorting (optional)
+                sortGPUs('default'); // Adjust this if you want a reset behavior
+            }
         });
     });
+    
 
     // Add event listeners for pagination
     const prevButton = document.getElementById("prev");
@@ -455,3 +462,7 @@ function sortGPUs(order) {
     currentPage = 1;
     updateGPUGrid();
 }
+function toggleFilterDrawer() {
+    const drawer = document.getElementById('filterDrawer');
+    drawer.classList.toggle('show');
+  }

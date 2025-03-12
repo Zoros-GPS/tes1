@@ -376,6 +376,31 @@ body {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
+.filter-drawer {
+    max-height: 0;          /* collapsed */
+    overflow: hidden;       /* hide content when collapsed */
+    transition: max-height 0.3s ease;
+    background-color: #1a1a1a; /* match your theme */
+    margin: 0 1rem;         /* example side spacing */
+  }
+  
+  /* Drawer "open" state */
+  .filter-drawer.show {
+    max-height: 600px; /* or something large enough to show all filters */
+  }
+  
+  /* Toggle Button */
+  .filter-toggle {
+    display: none;        /* hidden on desktop by default */
+    background: #333;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    margin: 1rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
 .gpu-header {
     display: flex;
     justify-content: space-between;
@@ -506,8 +531,8 @@ body {
 .sort-button.active {
     outline: none;
     background-color: rgba(30, 33, 58, 0.8);
-    border-color: #ff5252;
-    box-shadow: 0 8px 32px #e86060;
+    border-color: var(--primary);
+    box-shadow: 0 8px 32px rgba(108, 78, 217, 0.3);
 }
 
 /* 11. Utilities
@@ -602,6 +627,10 @@ body {
         --space-sm: 0.5rem;
     }
 
+    .title{
+        font-size: 2rem;
+    }
+
     .header {
         padding: 12px var(--space-md);
     }
@@ -628,15 +657,6 @@ body {
         padding: 0.875rem 1rem 0.875rem 3rem;
     }
 
-    .tabs {
-        flex-direction: column;
-        gap: 8px;
-        padding: var(--space-sm);
-    }
-
-    .tab {
-        padding: 0.625rem;
-    }
 
     .sort-buttons {
         flex-wrap: wrap;
@@ -646,6 +666,48 @@ body {
         flex: 1;
         min-width: 150px;
     }
+
+    .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin: 1rem 0;
+      }
+      .tab {
+        flex: 1; /* or auto, to fit content */
+        text-align: center;
+        padding: 0.5rem;
+        border-radius: 999px; /* pill shape */
+        border: none;
+        color: #fff;
+        cursor: pointer;
+      }
+      #nvidia-tab {
+        background-color: #76b900;
+      }
+      #amd-tab {
+        background-color: #ed1c24;
+      }
+      #intel-tab {
+        background-color: #0071c5;
+      }
+
+      .search-container {
+        width: 90%; /* or 100% minus some margin */
+        margin: 0 auto;
+        display: block;
+        position: sticky;
+        top: 0; 
+        z-index: 10; /* stays on top */
+      }
+
+      .filter-toggle {
+        display: inline-block; /* show the toggle button on mobile */
+      }
+      .filter-drawer {
+        max-height: none;  /* always open */
+        overflow: visible; /* visible filters */
+      }
 }
 
 @media (max-width: 480px) {

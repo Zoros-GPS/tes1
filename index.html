@@ -83,7 +83,16 @@
         <div class="layout">
             <!-- Updated Sidebar Filters -->
 <aside class="sidebar">
+    <!-- Filter Toggle Button (shown only on mobile) -->
+<button class="filter-toggle" onclick="toggleFilterDrawer()">
+    Filters
+  </button>
+  
+  <!-- Collapsible Drawer -->
+  <div id="filterDrawer" class="filter-drawer">
+    <!-- Your existing filters container (JS populates this) -->
     <div class="filters-container"></div>
+  </div>
 </aside>
 
 
