@@ -202,7 +202,6 @@ function updateCardFiltersForSeries(series) {
     const cardHeading = document.createElement('h4');
     cardHeading.className = 'filter-card-heading';
     cardHeading.textContent = 'Models';
-    cardsContainer.appendChild(cardHeading);
     
     // Create card filter buttons
     seriesCards.forEach(card => {
