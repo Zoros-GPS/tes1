@@ -897,8 +897,10 @@ body {
 }
 
 .series-button {
-    background-color: #0c0c15;
-    border: 1px solid #ccc;
+    background-color: rgba(30, 33, 58, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     border-radius: 4px;
     padding: 8px 12px;
     margin: 5px 0;
@@ -912,9 +914,10 @@ body {
 }
 
 .series-button.active {
-    background-color: #e0e7ff;
-    border-color: #6366f1;
-    color: #4338ca;
+    outline: none;
+    background-color: rgba(30, 33, 58, 0.8);
+    border-color: var(--primary);
+    box-shadow: 0 8px 32px rgba(108, 78, 217, 0.3);
 }
 
 .arrow-icon {
@@ -932,7 +935,7 @@ body {
     gap: 8px;
     padding: 8px 0 8px 16px;
     margin-left: 10px;
-    border-left: 2px solid #ddd;
+    border-left: 2px #7e68ff;
 }
 
 .cards-container.hidden {
