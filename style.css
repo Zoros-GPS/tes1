@@ -378,8 +378,7 @@ body {
 
   
   /* Toggle Button */
-  .filter-toggle {
-    display: none;        /* hidden on desktop by default */
+  .filter-toggle {        /* hidden on desktop by default */
     background: #333;
     color: #fff;
     padding: 0.5rem 1rem;
