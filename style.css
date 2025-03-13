@@ -658,7 +658,7 @@ body {
         min-width: 150px;
     }
     .sidebar {
-        padding: 0.5rem;
+        padding: 0.1rem;
 
     }
 
@@ -708,11 +708,12 @@ body {
 
       .filter-toggle {
         display: flex;
-        padding: 0.5rem;
+        padding: 1rem;
         background-color: var(--button-bg);
         border-radius: var(--border-radius-md);
         transition: var(--transition-default); /* show the toggle button on mobile */
       }
+
       .filter-toggle.active {
         outline: none;
         background-color: #7e68ff;

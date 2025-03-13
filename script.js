@@ -465,4 +465,7 @@ function sortGPUs(order) {
 function toggleFilterDrawer() {
     const drawer = document.getElementById('filterDrawer');
     drawer.classList.toggle('show');
+
+    const drawerbut = document.querySelector('.filter-toggle');
+    drawerbut.classList.toggle('active');
   }
