@@ -105,7 +105,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     position: sticky;
     top: 0;
-    background-color: #2c9696;
+    background-color: #563A9C;
     backdrop-filter: blur(10px);
     z-index: 100;
 }
@@ -698,8 +698,7 @@ body {
       }
 
       .search-container {
-        width: 90%; /* or 100% minus some margin */
-        padding: 0.875rem 1rem 0.875rem 3rem;
+        width: 95%; /* or 100% minus some margin */
         margin: 0 auto;
         display: block;
         position: sticky;
@@ -708,8 +707,19 @@ body {
       }
 
       .filter-toggle {
-        display: flex; /* show the toggle button on mobile */
+        display: flex;
+        padding: 0.5rem;
+        background-color: var(--button-bg);
+        border-radius: var(--border-radius-md);
+        transition: var(--transition-default); /* show the toggle button on mobile */
       }
+      .filter-toggle.active {
+        outline: none;
+        background-color: #7e68ff;
+        border-color: var(--primary);
+        color: white;
+        box-shadow: 0 8px 32px rgba(108, 78, 217, 0.3);
+    }
       /*.filter-drawer {
         max-height: none;   always open 
         overflow: visible; visible filters 
