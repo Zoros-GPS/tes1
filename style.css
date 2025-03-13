@@ -617,7 +617,7 @@ body {
     }
 
     .title{
-        font-size: 3.5rem;
+        font-size: 2.5rem;
     }
 
 
@@ -683,16 +683,16 @@ body {
       }
 
       .filter-drawer {
-        max-height: 0;          /* collapsed */
+        max-height: 0; 
+        display: none;         /* collapsed */
         overflow: hidden;       /* hide content when collapsed */
-        transition: max-height 0.3s ease;
-        background-color: #1a1a1a; /* match your theme */
+        transition: max-height 0.3s ease; /* match your theme */
         margin: 0 1rem;         /* example side spacing */
       }
       
       /* Drawer "open" state */
       .filter-drawer.show {
-        max-height: 600px; /* or something large enough to show all filters */
+        display: inline-block; /* or something large enough to show all filters */
       }
 
       .search-container {
@@ -707,10 +707,10 @@ body {
       .filter-toggle {
         display: inline-block; /* show the toggle button on mobile */
       }
-      .filter-drawer {
-        max-height: none;  /* always open */
-        overflow: visible; /* visible filters */
-      }
+      /*.filter-drawer {
+        max-height: none;   always open 
+        overflow: visible; visible filters 
+      }*/
 }
 
 @media (max-width: 480px) {
