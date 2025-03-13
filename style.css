@@ -627,7 +627,7 @@ body {
     }
 
     .logo {
-        font-size: 1.125rem;
+        font-size: 2rem;
     }
 
     .logo-icon {
@@ -673,7 +673,7 @@ body {
         color: #fff;
         cursor: pointer;
       }
-      #nvidia-tab {
+      /*#nvidia-tab {
         background-color: #76b900;
       }
       #amd-tab {
@@ -681,7 +681,7 @@ body {
       }
       #intel-tab {
         background-color: #0071c5;
-      }
+      }*/
 
       .filter-drawer {
         display: none;         /* collapsed */
@@ -695,6 +695,7 @@ body {
 
       .search-container {
         width: 90%; /* or 100% minus some margin */
+        padding: 0.875rem 1rem 0.875rem 3rem;
         margin: 0 auto;
         display: block;
         position: sticky;
