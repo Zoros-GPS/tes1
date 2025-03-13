@@ -617,6 +617,7 @@ body {
     }
 
     .title{
+        display: none;
         font-size: 2.5rem;
     }
 
