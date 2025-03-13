@@ -378,7 +378,8 @@ body {
 
   
   /* Toggle Button */
-  .filter-toggle {        /* hidden on desktop by default */
+  .filter-toggle {   
+    display: none;     /* hidden on desktop by default */
     background: #333;
     color: #fff;
     padding: 0.5rem 1rem;
@@ -682,11 +683,8 @@ body {
       }
 
       .filter-drawer {
-        max-height: 0; 
         display: none;         /* collapsed */
-        overflow: hidden;       /* hide content when collapsed */
-        transition: max-height 0.3s ease; /* match your theme */
-        margin: 0 1rem;         /* example side spacing */
+        /* example side spacing */
       }
       
       /* Drawer "open" state */
