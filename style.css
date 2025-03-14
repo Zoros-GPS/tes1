@@ -667,9 +667,14 @@ body {
     }
 
     .sort-button {
-        flex: 1;
-        font-size: small;
-        padding: auto;
+    display: none;     /* hidden on desktop by default */
+    background: #333;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    margin: 1rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
     }
     .sidebar {
         padding: 0.1rem;
