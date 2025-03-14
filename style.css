@@ -658,7 +658,7 @@ body {
 
     .sort-button {
         flex: 1;
-        min-width: 150px;
+        min-width: 75px;
     }
     .sidebar {
         padding: 0.1rem;
@@ -732,7 +732,7 @@ body {
     }
 
     .filterspan{
-        color: var(--primary);
+        color: var(--primary-light);
         font-weight: bold;
     }
 
@@ -743,7 +743,6 @@ body {
         padding: 1rem;
         color: white;
         background-color: var(--button-bg);
-        border-radius: var(--border-radius-md);
         transition: var(--transition-default); /* show the toggle button on mobile */
       }
 
