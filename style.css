@@ -668,8 +668,8 @@ body {
 
     .sort-button {
         flex: 1;
-        font-size: medium;
-        padding: auto;
+        font-size: small;
+        padding: 0;
         min-width: 75px;
     }
     .sidebar {
