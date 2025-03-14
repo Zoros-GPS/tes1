@@ -84,16 +84,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     // Add event listeners for pagination
-    const prevButton = document.getElementById("prev");
-    const nextButton = document.getElementById("next");
+    //const prevButton = document.getElementById("prev");
+    //const nextButton = document.getElementById("next");
     
-    if (prevButton) {
-        prevButton.addEventListener('click', prevPage);
-    }
+    //if (prevButton) {
+      //  prevButton.addEventListener('click', prevPage);
+    //}
     
-    if (nextButton) {
-        nextButton.addEventListener('click', nextPage);
-    }
+    //if (nextButton) {
+      //  nextButton.addEventListener('click', nextPage);
+    //}
 });
 
 function getUniqueSeries() {
