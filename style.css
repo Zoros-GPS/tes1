@@ -1030,7 +1030,7 @@ body {
 }
 .pagination button {
     border: none;
-    background: #007bff;
+    background: var(--primary-light);
     color: white;
     padding: 10px 15px;
     margin: 0 5px;
@@ -1039,10 +1039,11 @@ body {
     transition: 0.3s;
 }
 .pagination button:hover {
-    background: #0056b3;
+    background: var(--primary);
 }
 .pagination button:disabled {
-    background: #ccc;
+    background: grey;
+    color: black;
     cursor: not-allowed;
 }
 
