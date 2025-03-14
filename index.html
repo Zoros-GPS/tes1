@@ -98,7 +98,7 @@
             <aside class="sidebar">
                 <!-- Filter Toggle Button (shown only on mobile) -->
                 <button class="filter-toggle" onclick="toggleFilterDrawer()">
-                    Filter by: Series
+                    Filter by: <span class="filterspan">Series and Models</span>
                 </button>
 
                 <!-- Collapsible Drawer -->
@@ -109,21 +109,21 @@
 
                 <div class="sort-dropdown mob">
                     <div class="dropdown">
-                        <button class="dropbtn">Sort Options</button>
+                        <button class="dropbtn" onclick="togglesort()">Sort by: <span class="filterspan">Price</span></button>
                         <div class="dropdown-content">
                             <div class="dropdown-option" onclick="sortGPUs('high')">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="18 15 12 9 6 15"></polyline>
                                 </svg>
-                                Sort by High to Low
+                                High to Low
                             </div>
                             <div class="dropdown-option" onclick="sortGPUs('low')">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="6 9 12 15 18 9"></polyline>
                                 </svg>
-                                Sort by Low to High
+                                Low to High
                             </div>
                         </div>
                     </div>

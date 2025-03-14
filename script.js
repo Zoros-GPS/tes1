@@ -469,3 +469,11 @@ function toggleFilterDrawer() {
     const drawerbut = document.querySelector('.filter-toggle');
     drawerbut.classList.toggle('active');
   }
+
+  function togglesort() {
+    const drawer = document.querySelector('.dropbtn');
+    drawer.classList.toggle('active');
+
+    const drawerbut = document.querySelector('.dropdown-content');
+    drawerbut.classList.toggle('show');
+  }
