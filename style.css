@@ -499,6 +499,10 @@ body {
 .view-details:hover svg {
     transform: translateX(3px);
 }
+.dropdown-content {
+    display: none;         /* collapsed */
+    /* example side spacing */
+  }
 
 /* 10. Buttons & Interactive Elements
    ========================================= */
