@@ -107,21 +107,26 @@
                     <div class="filters-container"></div>
                 </div>
 
-                <div class="sort-buttons mob">
-                    <button class="sort-button" onclick="sortGPUs('high')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="18 15 12 9 6 15"></polyline>
-                        </svg>
-                        Sort by High to Low
-                    </button>
-                    <button class="sort-button" onclick="sortGPUs('low')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                        Sort by Low to High
-                    </button>
+                <div class="sort-dropdown mob">
+                    <div class="dropdown">
+                        <button class="dropbtn">Sort Options</button>
+                        <div class="dropdown-content">
+                            <div class="dropdown-option" onclick="sortGPUs('high')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="18 15 12 9 6 15"></polyline>
+                                </svg>
+                                Sort by High to Low
+                            </div>
+                            <div class="dropdown-option" onclick="sortGPUs('low')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                                Sort by Low to High
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </aside>
 
