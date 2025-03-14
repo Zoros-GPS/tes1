@@ -445,14 +445,18 @@ async function initializeApp() {
 function nextPage() {
     const totalItems = filterGPUs(gpuData, getActiveFilters()).length;
     if (currentPage < Math.ceil(totalItems / itemsPerPage)) {
+        console.log(currentPage)
         currentPage++;
+        console.log(currentPage)
         updateGPUGrid();
     }
 }
 
 function prevPage() {
     if (currentPage > 1) {
+        console.log(currentPage)
         currentPage--;
+        console.log(currentPage)
         updateGPUGrid();
     }
 }
