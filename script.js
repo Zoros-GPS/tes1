@@ -363,6 +363,7 @@ function updateGPUGrid() {
 function createGPUCard(gpu) {
     const card = document.createElement('div');
     card.className = 'gpu-card';
+    card.loading = "lazy";
     
     card.innerHTML = `
         <div class="gpu-header">
