@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - GPU Tracker</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --bg-main: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0d0;
+            --accent: #00ff9d;
+            --border: #2d2d42;
+            --header-bg: #1a1a2e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--header-bg);
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            background-color: #4a4a6a;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .logo-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent);
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        h2 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: var(--accent);
+        }
+        
+        p {
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .feature-card {
+            background-color: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .feature-card h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--header-bg);
+            color: var(--text-main);
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-logo-icon {
+            background-color: #4a4a6a;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .footer-logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        
+        .footer-copyright {
+            font-size: 12px;
+            color: #808090;
+            margin-top: 5px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container, .footer-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+            }
+            
+            .footer-logo {
+                margin-bottom: 10px;
+                justify-content: center;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">GP</div>
+                <div class="logo-text">GPU Tracker</div>
+            </a>
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/notes" class="nav-link">Notes</a>
+                <a href="/donate" class="nav-link">Donate</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>About GPU Price Tracker</h1>
+        
+        <h2>Our Mission</h2>
+        <p>GPU Price Tracker was born from a simple problem: finding the best GPU prices across multiple retailers is time-consuming and frustrating. Our mission is to simplify your hardware shopping experience by aggregating GPU prices from major online retailers in India in one convenient location.</p>
+        
+        <div class="feature-card">
+            <h3>What We Do</h3>
+            <p>GPU Price Tracker is a specialized price comparison tool focused exclusively on graphics cards. We:</p>
+            <ul>
+                <li>Compile GPU prices from 8 major online retailers in India</li>
+                <li>Update prices automatically every 6 hours</li>
+                <li>Organize listings by manufacturer (NVIDIA, AMD, Intel)</li>
+                <li>Provide direct links to retailer product pages</li>
+                <li>Offer a clean, user-friendly interface for easy comparison</li>
+            </ul>
+        </div>
+        
+        <h2>How It Works</h2>
+        <p>Our lightweight website uses HTML, CSS, and JavaScript to present GPU pricing data stored in JSON format. We do not collect any personal information from users, making your browsing experience completely private.</p>
+        
+        <h2>Who It's For</h2>
+        <p>Our service is designed for:</p>
+        <ul>
+            <li>PC builders looking for the best GPU deals</li>
+            <li>Hardware enthusiasts monitoring price trends</li>
+            <li>Anyone planning to purchase a graphics card in India</li>
+        </ul>
+        
+        <h2>The Story Behind GPU Price Tracker</h2>
+        <p>As a solo developer, I encountered a significant challenge while building my own custom PC: comparing GPU prices across multiple retailers was incredibly time-consuming. I found myself opening dozens of browser tabs, manually tracking prices, and constantly refreshing pages to check for updates.</p>
+        
+        <p>I created GPU Price Tracker to solve this problem not just for myself, but for the entire PC building community in India. What started as a personal project has grown into a resource that helps hardware enthusiasts make informed purchasing decisions.</p>
+        
+        <h2>Future Plans</h2>
+        <p>We're working on expanding our service to include:</p>
+        <ul>
+            <li>Price history tracking</li>
+            <li>Price drop alerts via email</li>
+            <li>Additional hardware component categories</li>
+            <li>Customizable comparison tools</li>
+        </ul>
+        
+        <h2>Support the Project</h2>
+        <p>GPU Price Tracker is developed and maintained by a single developer. If you find this service valuable, please consider supporting it through a donation. Your contribution helps cover hosting costs and enables future development of new features.</p>
+        
+        <p>Thank you for using GPU Price Tracker!</p>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <div class="footer-logo-icon">GP</div>
+                <div class="footer-logo-text">GPU Tracker</div>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/privacy-policy" class="footer-link">Privacy Policy</a>
+                <a href="/terms-of-service" class="footer-link">Terms of Service</a>
+                <a href="/contact" class="footer-link">Contact</a>
+            </div>
+        </div>
+        
+        <div class="footer-container">
+            <div class="footer-copyright">© 2025 GPU Tracker. All rights reserved.</div>
+        </div>
+    </footer>
+</body>
+</html>

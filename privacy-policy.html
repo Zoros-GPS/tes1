@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - GPU Tracker</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --bg-main: #0f0f1a;
+            --bg-card: #1a1a2e;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0d0;
+            --accent: #00ff9d;
+            --border: #2d2d42;
+            --header-bg: #1a1a2e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--header-bg);
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .logo-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent);
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        h2 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: var(--accent);
+        }
+        
+        p {
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .last-updated {
+            margin-top: 40px;
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--header-bg);
+            color: var(--text-main);
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer-logo-icon {
+            background-color: #4a4a6a;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .footer-logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        
+        .footer-copyright {
+            font-size: 12px;
+            color: #808090;
+            margin-top: 5px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container, .footer-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+            }
+            
+            .footer-logo {
+                margin-bottom: 10px;
+                justify-content: center;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">GP</div>
+                <div class="logo-text">GPU Tracker</div>
+            </a>
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/notes" class="nav-link">Notes</a>
+                <a href="/donate" class="nav-link">Donate</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Privacy Policy</h1>
+        
+        <h2>Introduction</h2>
+        <p>Welcome to GPU Price Tracker. This Privacy Policy explains our practices regarding data collection and usage on our website.</p>
+        
+        <h2>Data Collection</h2>
+        <p><strong>We Do Not Collect Personal Information</strong></p>
+        <p>GPU Price Tracker is designed with your privacy in mind. Our website:</p>
+        <ul>
+            <li>Does not collect personal information</li>
+            <li>Does not use cookies for tracking purposes</li>
+            <li>Does not store user data</li>
+            <li>Does not require account creation or login</li>
+        </ul>
+        
+        <h2>Technical Information</h2>
+        <p>Our website may automatically collect certain non-personal technical information solely for operational purposes:</p>
+        <ul>
+            <li>Browser type and version</li>
+            <li>Operating system</li>
+            <li>Page view statistics</li>
+            <li>Referring/exit pages</li>
+        </ul>
+        <p>This information is temporarily processed to ensure proper website functionality and is not stored or used to identify individual users.</p>
+        
+        <h2>Third-Party Links</h2>
+        <p>Our website contains links to third-party retailer websites. Please note that we are not responsible for the privacy practices of other sites. We encourage our users to be aware when they leave our site and to read the privacy statements of any website that collects personally identifiable information.</p>
+        
+        <h2>Analytics</h2>
+        <p>We may use basic analytics services to understand general usage patterns and improve our service. These analytics do not identify individual users and only provide aggregate data about website traffic and usage.</p>
+        
+        <h2>Changes to This Privacy Policy</h2>
+        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. Changes will be effective immediately upon posting.</p>
+        
+        <h2>Contact Us</h2>
+        <p>If you have any questions about this Privacy Policy, please contact us at [your email address].</p>
+        
+        <div class="last-updated">Last updated: March 15, 2025</div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <div class="footer-logo-icon">GP</div>
+                <div class="footer-logo-text">GPU Tracker</div>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/privacy-policy" class="footer-link">Privacy Policy</a>
+                <a href="/terms-of-service" class="footer-link">Terms of Service</a>
+                <a href="/contact" class="footer-link">Contact</a>
+            </div>
+        </div>
+        
+        <div class="footer-container">
+            <div class="footer-copyright">© 2025 GPU Tracker. All rights reserved.</div>
+        </div>
+    </footer>
+</body>
+</html>
